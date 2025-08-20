@@ -59,4 +59,15 @@ const syncCart = async (req, res) => {
   }
 };
 
-export { addToCart, removeFromCart, getCart, syncCart };
+// Clear user cart
+const clearCart = async (req, res) => {
+  try {
+    await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+    res.json({ success: true, message: "Cart cleared successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export { addToCart, removeFromCart, getCart, syncCart, clearCart };

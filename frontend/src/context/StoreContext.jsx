@@ -88,6 +88,18 @@ const StoreContextProvider = (props) => {
     });
   }, [token, url, setCartItemsAndPersist]);
 
+  // Clear cart completely
+  const clearCart = useCallback(async () => {
+    setCartItemsAndPersist({});
+    // Sync with server in background (non-blocking)
+    if (token) {
+      axios.post(url + "/api/cart/clear", {}, { headers: { token } })
+        .catch(error => {
+          console.error("Failed to clear cart on server:", error);
+        });
+    }
+  }, [token, url, setCartItemsAndPersist]);
+
   // Calculate total cart amount
   const getTotalCartAmount = useCallback(() => {
     let totalAmount = 0;
@@ -266,6 +278,7 @@ const StoreContextProvider = (props) => {
     setCartItems: setCartItemsAndPersist,
     addToCart,
     removeFromCart,
+    clearCart,
     getTotalCartAmount,
     getDiscountAmount,
     getFinalTotal,

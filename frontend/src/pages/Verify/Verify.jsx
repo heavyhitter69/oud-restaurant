@@ -7,7 +7,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const Verify = () => {
   const [searchParams] = useSearchParams();
-  const { url } = useContext(StoreContext);
+  const { url, clearCart } = useContext(StoreContext);
   const navigate = useNavigate();
 
   // Get parameters from both URL search params and hash params
@@ -39,6 +39,8 @@ const Verify = () => {
         
         if (response.data.success) {
           setStatus("success");
+          // Clear the cart after successful payment
+          await clearCart();
           // Start countdown
           const countdownInterval = setInterval(() => {
             setCountdown(prev => {
@@ -89,20 +91,22 @@ const Verify = () => {
               try {
                 const retryResponse = await axios.post(url + "/api/order/verify", { reference: ref });
                 console.log("Retry verification response:", retryResponse.data);
-                if (retryResponse.data.success) {
-                  setStatus("success");
-                  // Start countdown
-                  const countdownInterval = setInterval(() => {
-                    setCountdown(prev => {
-                      if (prev <= 1) {
-                        clearInterval(countdownInterval);
-                        navigate("/myorders");
-                        return 0;
-                      }
-                      return prev - 1;
-                    });
-                  }, 1000);
-                } else {
+                          if (retryResponse.data.success) {
+            setStatus("success");
+            // Clear the cart after successful payment
+            await clearCart();
+            // Start countdown
+            const countdownInterval = setInterval(() => {
+              setCountdown(prev => {
+                if (prev <= 1) {
+                  clearInterval(countdownInterval);
+                  navigate("/myorders");
+                  return 0;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+          } else {
                   setStatus("failed");
                 }
               } catch (retryError) {
