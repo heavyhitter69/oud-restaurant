@@ -16,20 +16,20 @@ import bannerRouter from "./routes/bannerRoute.js"
 const app = express()
 const port = process.env.PORT || 4000
 
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'"],
-    },
-  },
-  crossOriginEmbedderPolicy: false,
-}))
+            // Security middleware
+            app.use(helmet({
+              contentSecurityPolicy: {
+                directives: {
+                  defaultSrc: ["'self'"],
+                  styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+                  fontSrc: ["'self'", "https://fonts.gstatic.com"],
+                  imgSrc: ["'self'", "data:", "https:", "https://oud-restaurant-api.onrender.com"],
+                  scriptSrc: ["'self'"],
+                  connectSrc: ["'self'", "https://oud-restaurant-api.onrender.com"],
+                },
+              },
+              crossOriginEmbedderPolicy: false,
+            }))
 
 // Rate limiting
 const limiter = rateLimit({
@@ -75,19 +75,25 @@ app.use((req, res, next) => {
 //connect db
 connectDB().catch(console.error);
 
-// Static files with security headers
-app.use("/images", express.static('uploads', {
-  setHeaders: (res, path) => {
-    res.set('X-Content-Type-Options', 'nosniff')
-    res.set('Cache-Control', 'public, max-age=31536000')
-  }
-}))
-app.use("/uploads", express.static('uploads', {
-  setHeaders: (res, path) => {
-    res.set('X-Content-Type-Options', 'nosniff')
-    res.set('Cache-Control', 'public, max-age=31536000')
-  }
-}))
+            // Static files with security headers
+            app.use("/images", express.static('uploads', {
+              setHeaders: (res, path) => {
+                res.set('X-Content-Type-Options', 'nosniff')
+                res.set('Cache-Control', 'public, max-age=31536000')
+                res.set('Access-Control-Allow-Origin', '*')
+                res.set('Access-Control-Allow-Methods', 'GET')
+                res.set('Access-Control-Allow-Headers', 'Content-Type')
+              }
+            }))
+            app.use("/uploads", express.static('uploads', {
+              setHeaders: (res, path) => {
+                res.set('X-Content-Type-Options', 'nosniff')
+                res.set('Cache-Control', 'public, max-age=31536000')
+                res.set('Access-Control-Allow-Origin', '*')
+                res.set('Access-Control-Allow-Methods', 'GET')
+                res.set('Access-Control-Allow-Headers', 'Content-Type')
+              }
+            }))
 
 //api endpoints
 app.use("/api/food", foodRouter)
