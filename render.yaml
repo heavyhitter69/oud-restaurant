@@ -1,0 +1,45 @@
+services:
+  # Backend API
+  - type: web
+    name: oud-restaurant-api
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://oud-restaurant.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Frontend (Customer Website)
+  - type: web
+    name: oud-restaurant
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://oud-restaurant-api.onrender.com
+    autoDeploy: true
+
+  # Admin Panel
+  - type: web
+    name: oud-restaurant-admin
+    env: static
+    plan: free
+    buildCommand: cd admin && npm install && npm run build
+    staticPublishPath: admin/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://oud-restaurant-api.onrender.com
+    autoDeploy: true

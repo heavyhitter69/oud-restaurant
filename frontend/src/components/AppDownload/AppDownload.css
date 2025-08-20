@@ -1,0 +1,141 @@
+.app-download {
+    margin: auto auto;
+    margin-top: 100px;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--surface), var(--surface-hover));
+    border-radius: 2rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.app-download-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.app-download-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-download-content > p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.app-features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary-color);
+}
+
+.feature-icon {
+    font-size: 1.25rem;
+}
+
+.app-download-platforms {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.platform-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.platform-card:hover {
+    transform: translateY(-5px);
+}
+
+.platform-card img {
+    width: 140px;
+    height: auto;
+    transition: 0.3s;
+}
+
+.platform-card span {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.coming-soon {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .app-download {
+        margin-top: 60px;
+        padding: 2rem 1rem;
+    }
+    
+    .app-download-content h2 {
+        font-size: 2rem;
+    }
+    
+    .app-download-content > p {
+        font-size: 1rem;
+    }
+    
+    .app-features {
+        gap: 1rem;
+    }
+    
+    .feature {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .app-download-platforms {
+        gap: 1rem;
+    }
+    
+    .platform-card img {
+        width: 120px;
+    }
+}

@@ -1,0 +1,134 @@
+.my-orders {
+    margin: 2rem 0;
+    padding: 2rem 0;
+}
+
+.my-orders-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.my-orders-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.my-orders-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+}
+
+.my-orders .container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.my-orders-order {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 2fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    font-size: 0.875rem;
+    padding: 1.5rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.my-orders-order:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+}
+
+.my-orders-order img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.my-orders-order p span {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.my-orders-order p b {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.my-orders-order button {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    background: var(--primary-color);
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.my-orders-order button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.empty-orders {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--surface);
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+}
+
+.empty-orders h2 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.empty-orders p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+    .my-orders {
+        margin: 1rem 0;
+        padding: 1rem 0;
+    }
+    
+    .my-orders-header h1 {
+        font-size: 2rem;
+    }
+    
+    .my-orders-order {
+        grid-template-columns: 1fr 2fr 1fr;
+        row-gap: 0.75rem;
+        font-size: 0.75rem;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .my-orders-order img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .my-orders-order button {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Oud Restaurant - Premium Dining Experience | Fresh & Delicious Food</title>
+    <meta name="title" content="Oud Restaurant - Premium Dining Experience | Fresh & Delicious Food">
+    <meta name="description" content="Experience exceptional dining at Oud Restaurant. Fresh ingredients, authentic flavors, and premium service. Order online for delivery or dine-in. Best restaurant in town.">
+    <meta name="keywords" content="restaurant, food delivery, dining, fresh food, online ordering, local restaurant, premium dining, authentic cuisine">
+    <meta name="author" content="Oud Restaurant">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oud-restaurant.com/">
+    <meta property="og:title" content="Oud Restaurant - Premium Dining Experience">
+    <meta property="og:description" content="Experience exceptional dining at Oud Restaurant. Fresh ingredients, authentic flavors, and premium service.">
+    <meta property="og:image" content="/header_img.png">
+    <meta property="og:site_name" content="Oud Restaurant">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://oud-restaurant.com/">
+    <meta property="twitter:title" content="Oud Restaurant - Premium Dining Experience">
+    <meta property="twitter:description" content="Experience exceptional dining at Oud Restaurant. Fresh ingredients, authentic flavors, and premium service.">
+    <meta property="twitter:image" content="/header_img.png">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Oud Restaurant">
+    <meta name="application-name" content="Oud Restaurant">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Oud Restaurant",
+      "description": "Premium dining experience with fresh ingredients and authentic flavors",
+      "url": "https://oud-restaurant.com",
+      "logo": "https://oud-restaurant.com/logo.png",
+      "image": "https://oud-restaurant.com/header_img.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Restaurant Street",
+        "addressLocality": "City",
+        "addressRegion": "State",
+        "postalCode": "12345",
+        "addressCountry": "US"
+      },
+      "telephone": "+1-555-123-4567",
+      "email": "info@oud-restaurant.com",
+      "servesCuisine": ["International", "Local", "Premium"],
+      "priceRange": "$$",
+      "openingHours": "Mo-Su 11:00-23:00",
+      "deliveryAvailable": true,
+      "takeoutAvailable": true,
+      "dineInAvailable": true,
+      "acceptsReservations": true,
+      "paymentAccepted": ["Cash", "Credit Card", "Digital Payment"],
+      "sameAs": [
+        "https://www.facebook.com/oudrestaurant",
+        "https://www.instagram.com/oudrestaurant",
+        "https://twitter.com/oudrestaurant"
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => console.log('SW registered'))
+            .catch(registrationError => console.log('SW registration failed'));
+        });
+      }
+    </script>
+  </body>
+</html>
