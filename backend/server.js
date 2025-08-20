@@ -49,8 +49,8 @@ app.use(limiter)
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? [
-        'https://oud-restaurant.onrender.com',
-        'https://oud-restaurant-admin.onrender.com',
+        'https://oud-restaurant-4nt0.onrender.com',
+        'https://oud-restaurant-admin-yl6p.onrender.com',
         'https://oud-restaurant-api.onrender.com'
       ]
     : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],

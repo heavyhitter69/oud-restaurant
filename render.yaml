@@ -16,7 +16,7 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: CORS_ORIGIN
-        value: https://oud-restaurant.onrender.com
+        value: https://oud-restaurant-4nt0.onrender.com
     healthCheckPath: /health
     autoDeploy: true
 
