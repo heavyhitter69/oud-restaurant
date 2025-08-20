@@ -45,6 +45,7 @@ const App = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/order' element={token ? <PlaceOrder /> : <Home />} />
           <Route path='/verify' element={<Verify />} />
+          <Route path='/verify-test' element={<div style={{padding: '2rem', textAlign: 'center', fontSize: '2rem'}}>✅ Verify Test Route Working! 🎉</div>} />
           <Route path='/myorders' element={token ? <MyOrders /> : <Home />} />
           <Route path='/test' element={<div style={{padding: '2rem', textAlign: 'center'}}>Test route is working! 🎉</div>} />
           <Route path='*' element={<div style={{padding: '2rem', textAlign: 'center'}}>Page not found. <a href="/">Go home</a></div>} />

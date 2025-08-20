@@ -127,6 +127,8 @@ const Verify = () => {
   return (
     <div className='verify'>
       <div className="verify-container">
+        <h1>Verify Page Loaded Successfully!</h1>
+        <p>If you can see this, the routing is working.</p>
         {status === "verifying" && (
           <>
             <LoadingSpinner size="large" text="Verifying your payment..." />
