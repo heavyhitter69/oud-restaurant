@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oud-restaurant-v1';
+const CACHE_NAME = 'oud-restaurant-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -20,6 +20,12 @@ self.addEventListener('install', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
+  // Don't cache API requests
+  if (event.request.url.includes('/api/') || event.request.url.includes('oud-restaurant-api.onrender.com')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

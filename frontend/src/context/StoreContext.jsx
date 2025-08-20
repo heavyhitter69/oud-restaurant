@@ -7,9 +7,13 @@ const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
-      return savedCart ? JSON.parse(savedCart) : {};
+      if (!savedCart || savedCart === "undefined" || savedCart === "null") {
+        return {};
+      }
+      return JSON.parse(savedCart);
     } catch (error) {
       console.error("Error parsing cartItems from localStorage:", error);
+      localStorage.removeItem("cartItems"); // Clear invalid data
       return {};
     }
   });
@@ -215,7 +219,17 @@ const StoreContextProvider = (props) => {
       console.log("Server cart data:", serverCartData);
       
       // Only load server data if local cart is empty (first time login)
-      const currentCartItems = JSON.parse(localStorage.getItem("cartItems") || "{}");
+      let currentCartItems = {};
+      try {
+        const savedCart = localStorage.getItem("cartItems");
+        if (savedCart && savedCart !== "undefined" && savedCart !== "null") {
+          currentCartItems = JSON.parse(savedCart);
+        }
+      } catch (error) {
+        console.error("Error parsing localStorage cart:", error);
+        localStorage.removeItem("cartItems");
+      }
+      
       if (Object.keys(currentCartItems).length === 0) {
         setCartItemsAndPersist(serverCartData);
         console.log("Loaded server cart data:", serverCartData);
