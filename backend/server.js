@@ -164,6 +164,15 @@ app.get("/health", (req, res) => {
   })
 })
 
+// Test verify endpoint
+app.get("/test-verify", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Verify endpoint is accessible",
+    timestamp: new Date().toISOString()
+  })
+})
+
 app.get("/", (req, res) => {
   res.json({
     success: true,

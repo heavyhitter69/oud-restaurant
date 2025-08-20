@@ -46,6 +46,7 @@ const App = () => {
           <Route path='/order' element={token ? <PlaceOrder /> : <Home />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/myorders' element={token ? <MyOrders /> : <Home />} />
+          <Route path='/test' element={<div style={{padding: '2rem', textAlign: 'center'}}>Test route is working! 🎉</div>} />
         </Routes>
       </div>
       <Footer />

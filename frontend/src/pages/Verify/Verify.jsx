@@ -19,6 +19,7 @@ const Verify = () => {
   const verifyPayment = async () => {
     try {
       console.log("URL params:", { reference, trxref, status_param });
+      console.log("Current URL:", window.location.href);
       
       // Check if Paystack already indicated success/failure
       if (status_param === "success") {
@@ -48,62 +49,71 @@ const Verify = () => {
             });
           }, 1000);
         } else {
-          // Even if verification fails, check if order was actually paid
-          console.log("Verification failed, but checking if payment was actually successful...");
+          console.log("Verification failed:", response.data.message);
           setStatus("failed");
         }
       } else if (status_param === "cancelled" || status_param === "failed") {
         // Paystack indicates failure
         console.log("Payment cancelled or failed by Paystack");
         setStatus("failed");
-              } else {
-          // No status parameter, but reference exists - this is likely a successful payment
-          const ref = reference || trxref;
-          if (ref) {
-            console.log("No status param, but reference found. This is likely a successful payment. Verifying...");
-            const response = await axios.post(url + "/api/order/verify", { reference: ref });
-            console.log("Verification response:", response.data);
-            
-                         if (response.data.success) {
-               console.log("Payment verification successful!");
-               setStatus("success");
-               setTimeout(() => navigate("/myorders"), 2000);
-             } else {
-               console.log("Payment verification failed:", response.data.message);
-               // If verification fails but we have a reference, it might be a timing issue
-               // or the payment is still processing. Let's give it a moment and try again
-               console.log("First verification failed, trying again in 3 seconds...");
-               setTimeout(async () => {
-                 try {
-                   const retryResponse = await axios.post(url + "/api/order/verify", { reference: ref });
-                   console.log("Retry verification response:", retryResponse.data);
-                                  if (retryResponse.data.success) {
-                 setStatus("success");
-                 // Start countdown
-                 const countdownInterval = setInterval(() => {
-                   setCountdown(prev => {
-                     if (prev <= 1) {
-                       clearInterval(countdownInterval);
-                       navigate("/myorders");
-                       return 0;
-                     }
-                     return prev - 1;
-                   });
-                 }, 1000);
-               } else {
-                     setStatus("failed");
-                   }
-                 } catch (retryError) {
-                   console.error("Retry verification error:", retryError);
-                   setStatus("failed");
-                 }
-               }, 3000);
-             }
+      } else {
+        // No status parameter, but reference exists - this is likely a successful payment
+        const ref = reference || trxref;
+        if (ref) {
+          console.log("No status param, but reference found. This is likely a successful payment. Verifying...");
+          const response = await axios.post(url + "/api/order/verify", { reference: ref });
+          console.log("Verification response:", response.data);
+          
+          if (response.data.success) {
+            console.log("Payment verification successful!");
+            setStatus("success");
+            // Start countdown
+            const countdownInterval = setInterval(() => {
+              setCountdown(prev => {
+                if (prev <= 1) {
+                  clearInterval(countdownInterval);
+                  navigate("/myorders");
+                  return 0;
+                }
+                return prev - 1;
+              });
+            }, 1000);
           } else {
-            console.log("No reference or status found");
-            setStatus("failed");
+            console.log("Payment verification failed:", response.data.message);
+            // If verification fails but we have a reference, it might be a timing issue
+            // or the payment is still processing. Let's give it a moment and try again
+            console.log("First verification failed, trying again in 3 seconds...");
+            setTimeout(async () => {
+              try {
+                const retryResponse = await axios.post(url + "/api/order/verify", { reference: ref });
+                console.log("Retry verification response:", retryResponse.data);
+                if (retryResponse.data.success) {
+                  setStatus("success");
+                  // Start countdown
+                  const countdownInterval = setInterval(() => {
+                    setCountdown(prev => {
+                      if (prev <= 1) {
+                        clearInterval(countdownInterval);
+                        navigate("/myorders");
+                        return 0;
+                      }
+                      return prev - 1;
+                    });
+                  }, 1000);
+                } else {
+                  setStatus("failed");
+                }
+              } catch (retryError) {
+                console.error("Retry verification error:", retryError);
+                setStatus("failed");
+              }
+            }, 3000);
           }
+        } else {
+          console.log("No reference or status found");
+          setStatus("failed");
         }
+      }
     } catch (error) {
       console.error("Verification error:", error);
       setStatus("failed");
@@ -118,7 +128,16 @@ const Verify = () => {
     <div className='verify'>
       <div className="verify-container">
         {status === "verifying" && (
-          <LoadingSpinner size="large" text="Verifying your payment..." />
+          <>
+            <LoadingSpinner size="large" text="Verifying your payment..." />
+            <div style={{marginTop: '1rem', fontSize: '0.9rem', color: '#666'}}>
+              <p>Debug Info:</p>
+              <p>Reference: {reference || 'None'}</p>
+              <p>Trxref: {trxref || 'None'}</p>
+              <p>Status: {status_param || 'None'}</p>
+              <p>API URL: {url}</p>
+            </div>
+          </>
         )}
         {status === "success" && (
           <>
