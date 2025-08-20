@@ -13,6 +13,7 @@ const StoreContextProvider = (props) => {
       return {};
     }
   });
+  const [cartVersion, setCartVersion] = useState(0); // Force re-render when cart changes
   
   // Use environment variable for API URL, fallback to localhost for development
   const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -32,6 +33,7 @@ const StoreContextProvider = (props) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [cartLoaded, setCartLoaded] = useState(false);
+  const [cartClearedAfterOrder, setCartClearedAfterOrder] = useState(false);
 
   // Custom setCartItems function that also updates localStorage
   const setCartItemsAndPersist = useCallback((newCartItems) => {
@@ -90,10 +92,16 @@ const StoreContextProvider = (props) => {
 
   // Clear cart completely
   const clearCart = useCallback(async () => {
+    console.log("Clearing cart...");
     setCartItemsAndPersist({});
+    setCartVersion(prev => prev + 1); // Force re-render
+    setCartClearedAfterOrder(true); // Mark that cart was cleared after order
+    // Also clear localStorage directly
+    localStorage.removeItem("cartItems");
     // Sync with server in background (non-blocking)
     if (token) {
       axios.post(url + "/api/cart/clear", {}, { headers: { token } })
+        .then(() => console.log("Cart cleared on server"))
         .catch(error => {
           console.error("Failed to clear cart on server:", error);
         });
@@ -185,13 +193,14 @@ const StoreContextProvider = (props) => {
       console.log("Server cart data:", serverCartData);
       
       // Only load server data if local cart is empty (first time login)
-      if (Object.keys(cartItems).length === 0) {
+      const currentCartItems = JSON.parse(localStorage.getItem("cartItems") || "{}");
+      if (Object.keys(currentCartItems).length === 0) {
         setCartItemsAndPersist(serverCartData);
         console.log("Loaded server cart data:", serverCartData);
       } else {
         // If local cart has items, sync local to server instead
         try {
-          await axios.post(url + "/api/cart/sync", { cartData: cartItems }, { headers: { token } });
+          await axios.post(url + "/api/cart/sync", { cartData: currentCartItems }, { headers: { token } });
           console.log("Synced local cart to server");
         } catch (syncError) {
           console.error("Failed to sync cart:", syncError);
@@ -203,7 +212,7 @@ const StoreContextProvider = (props) => {
       console.error("Failed to load cart:", error);
       // Don't throw error to prevent login failure
     }
-  }, [url, setCartItemsAndPersist, cartItems, cartLoaded]);
+  }, [url, setCartItemsAndPersist, cartLoaded]);
 
   // Custom setToken function that also updates localStorage
   const setTokenAndPersist = useCallback((newToken, avatar = "", userInfo = null) => {
@@ -252,16 +261,17 @@ const StoreContextProvider = (props) => {
 
   // Load cart data on app initialization if token exists
   useEffect(() => {
-    if (token && isInitialized && !cartLoaded) {
+    if (token && isInitialized && !cartLoaded && !cartClearedAfterOrder) {
       loadCartData(token);
     }
-  }, [token, isInitialized, loadCartData, cartLoaded]);
+  }, [token, isInitialized, loadCartData, cartLoaded, cartClearedAfterOrder]);
 
   // Reset cart when token changes
   useEffect(() => {
     if (!token) {
       setCartItemsAndPersist({});
       setCartLoaded(false);
+      setCartClearedAfterOrder(false);
     }
   }, [token, setCartItemsAndPersist]);
 
@@ -269,12 +279,16 @@ const StoreContextProvider = (props) => {
   useEffect(() => {
     if (Object.keys(cartItems).length > 0) {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    } else {
+      // Clear localStorage when cart is empty
+      localStorage.removeItem("cartItems");
     }
   }, [cartItems]);
 
   const contextValue = {
     food_list,
     cartItems,
+    cartVersion,
     setCartItems: setCartItemsAndPersist,
     addToCart,
     removeFromCart,

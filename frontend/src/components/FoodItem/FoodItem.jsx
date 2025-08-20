@@ -4,12 +4,12 @@ import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
 const FoodItem = ({ id, name, price, description, image }) => {
-  const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
+  const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
 
   if (!id || !name || !image) return null; // Prevent rendering broken items
 
   return (
-    <div className='food-item' id={id}> {/* 👈 This is the change */}
+    <div className='food-item' id={id} key={`${id}-${cartVersion}`}>
       <div className="food-item-img-container">
         <img
           className="food-item-image"
