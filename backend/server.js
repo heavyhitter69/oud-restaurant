@@ -4,6 +4,7 @@ import express  from "express"
 import cors from "cors"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
+import path from "path"
 import { connectDB } from "./config/db.js"
 import foodRouter from "./routes/foodRoute.js"
 import userRouter from "./routes/userRoute.js"
@@ -16,11 +17,13 @@ import bannerRouter from "./routes/bannerRoute.js"
 const app = express()
 const port = process.env.PORT || 4000
 
-            // Security middleware - Disable CEP to allow cross-origin images
+            // Security middleware - Completely disable for image loading
             app.use(helmet({
               contentSecurityPolicy: false,
               crossOriginEmbedderPolicy: false,
               crossOriginResourcePolicy: false,
+              crossOriginOpenerPolicy: false,
+              frameguard: false,
             }))
 
 // Rate limiting
@@ -77,6 +80,8 @@ connectDB().catch(console.error);
                 res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
                 res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
                 res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+                res.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
+                res.set('Cross-Origin-Opener-Policy', 'unsafe-none')
               }
             }))
             app.use("/uploads", express.static('uploads', {
@@ -87,8 +92,31 @@ connectDB().catch(console.error);
                 res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
                 res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
                 res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+                res.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
+                res.set('Cross-Origin-Opener-Policy', 'unsafe-none')
               }
             }))
+
+            // Special route for problematic images with explicit CORS
+            app.get("/images/:filename", (req, res) => {
+              const filename = req.params.filename
+              const filePath = path.join(__dirname, 'uploads', filename)
+              
+              // Set CORS headers explicitly
+              res.set('Access-Control-Allow-Origin', '*')
+              res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
+              res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+              res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+              res.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
+              res.set('Cross-Origin-Opener-Policy', 'unsafe-none')
+              
+              res.sendFile(filePath, (err) => {
+                if (err) {
+                  console.log(`Image not found: ${filename}`)
+                  res.status(404).send('Image not found')
+                }
+              })
+            })
 
 //api endpoints
 app.use("/api/food", foodRouter)
