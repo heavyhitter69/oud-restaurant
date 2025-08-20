@@ -3,7 +3,7 @@ PORT=4000
 NODE_ENV=development
 
 # Database Configuration
-MONGODB_URI=mongodb+srv://sarkodieemil:Hildaszn69@cluster0.wxfarmq.mongodb.net/oud-restaurant?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://sarkodieemil:Hildaszn69@cluster0.wxfarmq.mongodb.net/build-8?retryWrites=true&w=majority
 
 # JWT Configuration
 JWT_SECRET=oud_restaurant_super_secure_jwt_secret_2024_heavyhitter69
