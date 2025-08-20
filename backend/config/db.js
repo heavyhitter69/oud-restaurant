@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const connectDB = async () => {
     try {
         // Try MongoDB Atlas connection
-        const mongoURI = 'mongodb+srv://sarkodieemil:Hildaszn69@cluster0.wxfarmq.mongodb.net/build-8?retryWrites=true&w=majority';
+        const mongoURI = 'mongodb+srv://sarkodieemil:Hildaszn69@cluster0.wxfarmq.mongodb.net/oud-restaurant?retryWrites=true&w=majority';
         await mongoose.connect(mongoURI);
         console.log("✅ MongoDB Atlas Connected Successfully");
     } catch (error) {
