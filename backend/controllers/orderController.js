@@ -21,7 +21,9 @@ const EMAIL_PASS = process.env.EMAIL_PASS || 'your-email-password';
 
 const placeOrder = async (req,res) => {
 
-    const frontend_url = "http://localhost:5173"
+    const frontend_url = process.env.NODE_ENV === 'production' 
+  ? "https://oud-restaurant-4nt0.onrender.com" 
+  : "http://localhost:5173"
   try {
     // Check for recent duplicate orders (within last 5 minutes)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);

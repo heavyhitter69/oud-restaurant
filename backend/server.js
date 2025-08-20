@@ -151,7 +151,7 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(port, () => {
-  console.log(`🚀 Server Started on http://localhost:${port}`)
+  console.log(`🚀 Server Started on port ${port}`)
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`)
   console.log(`🔒 Security: Helmet, Rate Limiting, CORS enabled`)
 })
