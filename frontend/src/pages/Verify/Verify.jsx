@@ -7,7 +7,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const Verify = () => {
   const [searchParams] = useSearchParams();
-  const { url, clearCart } = useContext(StoreContext);
+  const { url, clearCart, forceCartReset } = useContext(StoreContext);
   const navigate = useNavigate();
 
   // Get parameters from both URL search params and hash params
@@ -41,17 +41,24 @@ const Verify = () => {
           setStatus("success");
           // Clear the cart after successful payment
           await clearCart();
-          // Start countdown
-          const countdownInterval = setInterval(() => {
-            setCountdown(prev => {
-              if (prev <= 1) {
-                clearInterval(countdownInterval);
-                navigate("/myorders");
-                return 0;
-              }
-              return prev - 1;
-            });
-          }, 1000);
+          // Also force cart reset for immediate UI update
+          forceCartReset();
+          
+          // Force a small delay to ensure cart clearing is processed
+          setTimeout(() => {
+            // Start countdown
+            const countdownInterval = setInterval(() => {
+              setCountdown(prev => {
+                if (prev <= 1) {
+                  clearInterval(countdownInterval);
+                  // Force page refresh to ensure cart is cleared
+                  window.location.href = "/#/myorders";
+                  return 0;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+          }, 500);
         } else {
           console.log("Verification failed:", response.data.message);
           setStatus("failed");
@@ -95,17 +102,24 @@ const Verify = () => {
             setStatus("success");
             // Clear the cart after successful payment
             await clearCart();
-            // Start countdown
-            const countdownInterval = setInterval(() => {
-              setCountdown(prev => {
-                if (prev <= 1) {
-                  clearInterval(countdownInterval);
-                  navigate("/myorders");
-                  return 0;
-                }
-                return prev - 1;
-              });
-            }, 1000);
+            // Also force cart reset for immediate UI update
+            forceCartReset();
+            
+            // Force a small delay to ensure cart clearing is processed
+            setTimeout(() => {
+              // Start countdown
+              const countdownInterval = setInterval(() => {
+                setCountdown(prev => {
+                  if (prev <= 1) {
+                    clearInterval(countdownInterval);
+                    // Force page refresh to ensure cart is cleared
+                    window.location.href = "/#/myorders";
+                    return 0;
+                  }
+                  return prev - 1;
+                });
+              }, 1000);
+            }, 500);
           } else {
                   setStatus("failed");
                 }
@@ -164,38 +178,11 @@ const Verify = () => {
             </div>
             <h2 className="status-text success">Payment Successful!</h2>
             <p className="status-message">Your order has been confirmed and is being processed.</p>
-            <div className="success-details">
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 12l2 2 4-4"/>
-                    <circle cx="12" cy="12" r="10"/>
-                  </svg>
-                </div>
-                <span>Order confirmed</span>
-              </div>
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                </div>
-                <span>Payment verified</span>
-              </div>
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                </div>
-                <span>Redirecting to orders...</span>
-              </div>
-            </div>
             <div className="redirect-progress">
               <div className="progress-bar">
                 <div className="progress-fill"></div>
               </div>
-              <p className="redirect-text">Redirecting in <span className="countdown">{countdown}</span> seconds...</p>
+              <p className="redirect-text">Redirecting to your orders in <span className="countdown">{countdown}</span> seconds...</p>
             </div>
           </>
         )}

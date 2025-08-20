@@ -1,10 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './FoodItem.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
 const FoodItem = ({ id, name, price, description, image }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
+  const [localCartItems, setLocalCartItems] = useState(cartItems);
+
+  // Listen for cart clearing events
+  useEffect(() => {
+    const handleCartCleared = () => {
+      setLocalCartItems({});
+    };
+
+    window.addEventListener('cartCleared', handleCartCleared);
+    return () => window.removeEventListener('cartCleared', handleCartCleared);
+  }, []);
+
+  // Update local cart items when context changes
+  useEffect(() => {
+    setLocalCartItems(cartItems);
+  }, [cartItems, cartVersion]);
 
   if (!id || !name || !image) return null; // Prevent rendering broken items
 
@@ -31,7 +47,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
             console.log(`Image loaded successfully: ${e.target.src} for item: ${name}`);
           }}
         />
-        {!cartItems?.[id] ? (
+        {!localCartItems?.[id] ? (
           <img
             className='add'
             onClick={() => addToCart(id)}
@@ -41,7 +57,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
         ) : (
           <div className="food-item-counter">
             <img onClick={() => removeFromCart(id)} src={assets.remove_icon_red} alt="Remove" />
-            <p>{cartItems[id]}</p>
+            <p>{localCartItems[id]}</p>
             <img onClick={() => addToCart(id)} src={assets.add_icon_green} alt="Add" />
           </div>
         )}

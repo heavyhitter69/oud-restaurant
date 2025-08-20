@@ -93,20 +93,42 @@ const StoreContextProvider = (props) => {
   // Clear cart completely
   const clearCart = useCallback(async () => {
     console.log("Clearing cart...");
-    setCartItemsAndPersist({});
+    
+    // Clear all cart-related state immediately
+    setCartItems({});
     setCartVersion(prev => prev + 1); // Force re-render
     setCartClearedAfterOrder(true); // Mark that cart was cleared after order
-    // Also clear localStorage directly
+    
+    // Clear localStorage immediately
     localStorage.removeItem("cartItems");
+    
+    // Force a small delay to ensure state updates
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     // Sync with server in background (non-blocking)
     if (token) {
-      axios.post(url + "/api/cart/clear", {}, { headers: { token } })
-        .then(() => console.log("Cart cleared on server"))
-        .catch(error => {
-          console.error("Failed to clear cart on server:", error);
-        });
+      try {
+        await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
+        console.log("Cart cleared on server");
+      } catch (error) {
+        console.error("Failed to clear cart on server:", error);
+      }
     }
-  }, [token, url, setCartItemsAndPersist]);
+    
+    console.log("Cart clearing completed");
+  }, [token, url]);
+
+  // Force cart reset - more aggressive clearing
+  const forceCartReset = useCallback(() => {
+    console.log("Force resetting cart...");
+    setCartItems({});
+    setCartVersion(prev => prev + 1);
+    setCartClearedAfterOrder(true);
+    localStorage.removeItem("cartItems");
+    
+    // Dispatch a custom event to notify all components
+    window.dispatchEvent(new CustomEvent('cartCleared'));
+  }, []);
 
   // Calculate total cart amount
   const getTotalCartAmount = useCallback(() => {
@@ -293,6 +315,7 @@ const StoreContextProvider = (props) => {
     addToCart,
     removeFromCart,
     clearCart,
+    forceCartReset,
     getTotalCartAmount,
     getDiscountAmount,
     getFinalTotal,
