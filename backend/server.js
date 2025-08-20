@@ -102,18 +102,46 @@ connectDB().catch(console.error);
               const filename = req.params.filename
               const filePath = path.join(__dirname, 'uploads', filename)
               
-              // Set CORS headers explicitly
+              // Set CORS headers explicitly - more aggressive approach
               res.set('Access-Control-Allow-Origin', '*')
               res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
-              res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+              res.set('Access-Control-Allow-Headers', '*')
               res.set('Cross-Origin-Resource-Policy', 'cross-origin')
               res.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
               res.set('Cross-Origin-Opener-Policy', 'unsafe-none')
+              res.set('X-Frame-Options', 'SAMEORIGIN')
+              
+              // Handle preflight requests
+              if (req.method === 'OPTIONS') {
+                res.status(200).end()
+                return
+              }
               
               res.sendFile(filePath, (err) => {
                 if (err) {
                   console.log(`Image not found: ${filename}`)
                   res.status(404).send('Image not found')
+                } else {
+                  console.log(`Image served successfully: ${filename}`)
+                }
+              })
+            })
+
+            // Alternative route for the specific problematic image
+            app.get("/api/image/:filename", (req, res) => {
+              const filename = req.params.filename
+              const filePath = path.join(__dirname, 'uploads', filename)
+              
+              // Minimal headers for maximum compatibility
+              res.set('Access-Control-Allow-Origin', '*')
+              res.set('Content-Type', 'image/png')
+              
+              res.sendFile(filePath, (err) => {
+                if (err) {
+                  console.log(`API Image not found: ${filename}`)
+                  res.status(404).send('Image not found')
+                } else {
+                  console.log(`API Image served successfully: ${filename}`)
                 }
               })
             })
