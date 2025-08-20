@@ -253,6 +253,13 @@ const StoreContextProvider = (props) => {
     }
   }, [token, setCartItemsAndPersist]);
 
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    if (Object.keys(cartItems).length > 0) {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
+
   const contextValue = {
     food_list,
     cartItems,

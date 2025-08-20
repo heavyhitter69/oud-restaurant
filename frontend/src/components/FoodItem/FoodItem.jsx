@@ -13,13 +13,15 @@ const FoodItem = ({ id, name, price, description, image }) => {
       <div className="food-item-img-container">
         <img
           className="food-item-image"
-          src={image === '1747642902588food_2.png' ? `${url}/api/image/${image}` : `${url}/images/${image}`}
+          src={`${url}/images/${image}`}
           alt={name}
           onError={(e) => { 
             console.log(`Image failed to load: ${e.target.src} for item: ${name}`);
             // Try alternative route if first attempt failed
             if (e.target.src.includes('/images/') && !e.target.src.includes('/api/image/')) {
               e.target.src = e.target.src.replace('/images/', '/api/image/');
+            } else if (e.target.src.includes('/api/image/') && !e.target.src.includes('/uploads/')) {
+              e.target.src = e.target.src.replace('/api/image/', '/uploads/');
             } else {
               // Use a data URL for a simple placeholder image
               e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-family='Arial' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"

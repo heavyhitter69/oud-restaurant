@@ -205,6 +205,23 @@ a {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive container */
+@media (max-width: 1200px) {
+  .app {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 0 0.5rem;
+  }
 }
 
 /* Responsive Container */
