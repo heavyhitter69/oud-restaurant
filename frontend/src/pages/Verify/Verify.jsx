@@ -7,11 +7,13 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const Verify = () => {
   const [searchParams] = useSearchParams();
-  const reference = searchParams.get("reference");
-  const trxref = searchParams.get("trxref");
-  const status_param = searchParams.get("status");
   const { url } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  // Get parameters from both URL search params and hash params
+  const reference = searchParams.get("reference") || new URLSearchParams(window.location.hash.split('?')[1] || '').get("reference");
+  const trxref = searchParams.get("trxref") || new URLSearchParams(window.location.hash.split('?')[1] || '').get("trxref");
+  const status_param = searchParams.get("status") || new URLSearchParams(window.location.hash.split('?')[1] || '').get("status");
 
   const [status, setStatus] = useState("verifying"); // 'verifying', 'success', 'failed'
   const [countdown, setCountdown] = useState(2);
@@ -112,6 +114,14 @@ const Verify = () => {
         } else {
           console.log("No reference or status found");
           setStatus("failed");
+          // Show a more helpful error message with retry options
+          setTimeout(() => {
+            if (window.confirm("Payment verification failed. Would you like to try again?")) {
+              navigate("/cart");
+            } else {
+              navigate("/");
+            }
+          }, 3000);
         }
       }
     } catch (error) {
@@ -188,12 +198,16 @@ const Verify = () => {
         {status === "failed" && (
           <>
             <div className="icon failed">✕</div>
-            <h2 className="status-text failed">Payment Failed</h2>
-            <p className="status-message">Payment verification failed. Please check your orders or contact support.</p>
+            <h2 className="status-text failed">Payment Verification Failed</h2>
+            <p className="status-message">We couldn't verify your payment automatically. This might be due to a temporary issue.</p>
             <div className="verify-actions">
               <button onClick={() => navigate("/myorders")} className="check-orders-btn">Check My Orders</button>
+              <button onClick={() => navigate("/cart")} className="retry-btn">Try Payment Again</button>
               <button onClick={() => navigate("/")} className="home-btn">Go Home</button>
             </div>
+            <p style={{fontSize: '0.9rem', color: '#666', marginTop: '1rem'}}>
+              If you believe your payment was successful, please check your orders or contact support.
+            </p>
           </>
         )}
       </div>
