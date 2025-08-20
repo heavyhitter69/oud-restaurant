@@ -77,7 +77,7 @@ const placeOrder = async (req,res) => {
             amount: totalAmount,
             email: req.body.address.email,
             currency: "GHS",
-            callback_url: `${frontend_url}/verify`,
+            callback_url: `${frontend_url}/#/verify`,
             metadata: {
                 order_id: newOrder._id.toString(),
                 custom_fields: [
