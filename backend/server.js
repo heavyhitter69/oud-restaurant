@@ -74,8 +74,9 @@ connectDB().catch(console.error);
                 res.set('X-Content-Type-Options', 'nosniff')
                 res.set('Cache-Control', 'public, max-age=31536000')
                 res.set('Access-Control-Allow-Origin', '*')
-                res.set('Access-Control-Allow-Methods', 'GET')
-                res.set('Access-Control-Allow-Headers', 'Content-Type')
+                res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
+                res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+                res.set('Cross-Origin-Resource-Policy', 'cross-origin')
               }
             }))
             app.use("/uploads", express.static('uploads', {
@@ -83,8 +84,9 @@ connectDB().catch(console.error);
                 res.set('X-Content-Type-Options', 'nosniff')
                 res.set('Cache-Control', 'public, max-age=31536000')
                 res.set('Access-Control-Allow-Origin', '*')
-                res.set('Access-Control-Allow-Methods', 'GET')
-                res.set('Access-Control-Allow-Headers', 'Content-Type')
+                res.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
+                res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+                res.set('Cross-Origin-Resource-Policy', 'cross-origin')
               }
             }))
 
