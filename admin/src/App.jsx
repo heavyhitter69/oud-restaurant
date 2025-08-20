@@ -26,6 +26,8 @@ const App = () => {
             <Route path= "/list" element= {<List url={url}/>} />
             <Route path= "/orders" element= {<Orders url={url}/>} />
             <Route path= "/marketing" element= {<Marketing url={url}/>} />
+            <Route path= "/" element= {<Add url={url}/>} />
+            <Route path= "*" element= {<div style={{padding: '2rem', textAlign: 'center'}}>Page not found. <a href="/add">Go to Add</a></div>} />
           </Routes>
         </main>
       </div>
