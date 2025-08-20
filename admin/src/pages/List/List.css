@@ -1,6 +1,6 @@
 .list-table-format{
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
+    grid-template-columns: 0.5fr 2fr 2fr 1fr 1fr 0.5fr;
     align-items: center;
     gap: 10px;
     padding: 12px 15px;
@@ -12,6 +12,47 @@
 }
 .list-table-format img{
     width: 50px;
+}
+
+.edit-image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.edit-image-container img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.edit-image-container input[type="file"] {
+    font-size: 10px;
+    width: 100%;
+}
+
+.description-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.edit-actions, .action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.list-table-format textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.list-table-format select {
+    font-size: 12px;
+    padding: 5px;
 }
 
 @media (max-width:600px) {

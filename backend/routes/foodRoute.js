@@ -17,6 +17,6 @@ const upload = multer({ storage: storage });
 foodRouter.post("/add", upload.single("image"), addFood);
 foodRouter.get("/list", listFood);
 foodRouter.post("/remove", removeFood);
-foodRouter.put("/update/:id", updateFood); // 🔥 This is the new route
+foodRouter.put("/update/:id", upload.single("image"), updateFood); // 🔥 Now supports image upload
 
 export default foodRouter;

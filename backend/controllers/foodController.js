@@ -50,12 +50,24 @@ const removeFood = async (req, res) => {
 // ✅ Update food item
 const updateFood = async (req, res) => {
   try {
-    const { name, category, price } = req.body;
+    const { name, category, price, description } = req.body;
     const foodId = req.params.id;
+
+    // Handle image upload if provided
+    let updateData = { name, category, price, description };
+    
+    if (req.file) {
+      // Delete old image if new one is uploaded
+      const oldFood = await foodModel.findById(foodId);
+      if (oldFood && oldFood.image) {
+        fs.unlink(`uploads/${oldFood.image}`, () => {});
+      }
+      updateData.image = req.file.filename;
+    }
 
     const updated = await foodModel.findByIdAndUpdate(
       foodId,
-      { name, category, price },
+      updateData,
       { new: true }
     );
 
