@@ -148,7 +148,9 @@ const StoreContextProvider = (props) => {
   // Fetch food list
   const fetchFoodList = useCallback(async () => {
     try {
+      console.log("Fetching food list from:", url + "/api/food/list");
       const response = await axios.get(url + "/api/food/list");
+      console.log("Food list response:", response.data);
       setFoodList(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch food list:", error);
