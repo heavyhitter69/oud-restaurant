@@ -2,11 +2,8 @@ const CACHE_NAME = 'oud-restaurant-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/src/main.jsx',
-  '/src/App.jsx',
-  '/src/index.css',
   '/header_img.png',
-  '/logo.png',
+  '/vite.svg',
   'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'
 ];
 
