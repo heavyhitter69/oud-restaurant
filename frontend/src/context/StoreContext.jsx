@@ -107,73 +107,33 @@ const StoreContextProvider = (props) => {
     });
   }, [token, url, setCartItemsAndPersist]);
 
-  // Clear cart completely - ULTRA AGGRESSIVE SOLUTION
+  // Clear cart completely - SIMPLE AND EFFECTIVE
   const clearCart = useCallback(async () => {
-    console.log("🚨 ULTRA AGGRESSIVE CART CLEARING INITIATED...");
+    console.log("🧹 CLEARING CART...");
     
-    // STEP 1: Immediate state annihilation
+    // Clear state immediately
     setCartItems({});
-    setCartVersion(prev => prev + 1000); // Force massive re-render
+    setCartVersion(prev => prev + 1);
     setCartClearedAfterOrder(true);
     
-    // STEP 2: Complete storage annihilation
-    try {
-      // Clear ALL localStorage and sessionStorage
-      localStorage.clear();
-      sessionStorage.clear();
-      
-      // Restore only essential data
-      if (token) localStorage.setItem("token", token);
-      if (userAvatar) localStorage.setItem("userAvatar", userAvatar);
-      if (userData) localStorage.setItem("userData", JSON.stringify(userData));
-    } catch (error) {
-      console.error("Storage annihilation error:", error);
-    }
+    // Clear localStorage
+    localStorage.removeItem("cartItems");
     
-    // STEP 3: Event bombardment
-    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart', 'cartAnnihilated'];
-    events.forEach(eventType => {
-      for (let i = 0; i < 5; i++) {
-        window.dispatchEvent(new CustomEvent(eventType));
-      }
-    });
-    
-    // STEP 4: Clear server cart
+    // Clear server cart
     if (token) {
       try {
         await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
-        console.log("✅ Server cart annihilated");
+        console.log("✅ Server cart cleared");
       } catch (error) {
-        console.error("❌ Server cart annihilation failed:", error);
+        console.error("❌ Server cart clearing failed:", error);
       }
     }
     
-    // STEP 5: Force multiple component updates
-    setTimeout(() => {
-      setCartItems({});
-      setCartVersion(prev => prev + 1);
-      window.dispatchEvent(new CustomEvent('cartCleared'));
-    }, 10);
+    // Dispatch event for components
+    window.dispatchEvent(new CustomEvent('cartCleared'));
     
-    setTimeout(() => {
-      setCartItems({});
-      setCartVersion(prev => prev + 1);
-      window.dispatchEvent(new CustomEvent('cartCleared'));
-    }, 100);
-    
-    setTimeout(() => {
-      setCartItems({});
-      setCartVersion(prev => prev + 1);
-      window.dispatchEvent(new CustomEvent('cartCleared'));
-    }, 500);
-    
-    // STEP 6: Force page refresh as ultimate solution
-    setTimeout(() => {
-      console.log("🚨 ULTRA AGGRESSIVE: Forcing page refresh to ensure cart clearing...");
-      window.location.reload();
-    }, 2000);
-    
-  }, [token, url, userAvatar, userData]);
+    console.log("✅ Cart cleared successfully");
+  }, [token, url]);
 
   // Force cart reset - more aggressive clearing
   const forceCartReset = useCallback(() => {
