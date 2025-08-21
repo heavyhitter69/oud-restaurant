@@ -312,7 +312,15 @@ const StoreContextProvider = (props) => {
   // Load cart data on app initialization if token exists
   useEffect(() => {
     if (token && isInitialized && !cartLoaded && !cartClearedAfterOrder) {
+      console.log("Loading cart data - conditions met");
       loadCartData(token);
+    } else {
+      console.log("Skipping cart load - conditions not met:", {
+        hasToken: !!token,
+        isInitialized,
+        cartLoaded,
+        cartClearedAfterOrder
+      });
     }
   }, [token, isInitialized, loadCartData, cartLoaded, cartClearedAfterOrder]);
 
