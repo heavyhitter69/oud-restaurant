@@ -429,8 +429,9 @@
     .navbar-right {
         gap: 0.75rem;
     }
+    /* Keep search container visible on mobile */
     .navbar-search-container {
-        display: none;
+        display: flex;
     }
 }
 

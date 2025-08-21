@@ -22,7 +22,20 @@ const StoreContextProvider = (props) => {
   // Use environment variable for API URL, fallback to localhost for development
   const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
   
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [token, setToken] = useState(() => {
+    // Check if user wants a fresh start (from URL parameter)
+    const urlParams = new URLSearchParams(window.location.search);
+    const freshStart = urlParams.get('fresh');
+    
+    if (freshStart === 'true') {
+      // Clear all data for fresh start
+      localStorage.clear();
+      sessionStorage.clear();
+      return "";
+    }
+    
+    return localStorage.getItem("token") || "";
+  });
   const [userAvatar, setUserAvatar] = useState(localStorage.getItem("userAvatar") || "");
   const [userData, setUserData] = useState(() => {
     try {

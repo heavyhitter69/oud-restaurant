@@ -39,10 +39,29 @@ const Verify = () => {
         
         if (response.data.success) {
           setStatus("success");
-          // Clear the cart after successful payment
-          await clearCart();
-          // Also force cart reset for immediate UI update
-          forceCartReset();
+          
+          // Aggressive cart clearing
+          try {
+            // Clear cart multiple ways
+            await clearCart();
+            forceCartReset();
+            
+            // Clear localStorage directly
+            localStorage.removeItem("cartItems");
+            localStorage.removeItem("cartData");
+            
+            // Dispatch custom event
+            window.dispatchEvent(new CustomEvent('cartCleared'));
+            
+            // Force state reset
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('forceCartReset'));
+            }, 100);
+            
+            console.log("Cart cleared successfully");
+          } catch (error) {
+            console.error("Error clearing cart:", error);
+          }
           
           // Force a small delay to ensure cart clearing is processed
           setTimeout(() => {
@@ -58,7 +77,7 @@ const Verify = () => {
                 return prev - 1;
               });
             }, 1000);
-          }, 500);
+          }, 1000);
         } else {
           console.log("Verification failed:", response.data.message);
           setStatus("failed");
@@ -100,10 +119,29 @@ const Verify = () => {
                 console.log("Retry verification response:", retryResponse.data);
                           if (retryResponse.data.success) {
             setStatus("success");
-            // Clear the cart after successful payment
-            await clearCart();
-            // Also force cart reset for immediate UI update
-            forceCartReset();
+            
+            // Aggressive cart clearing
+            try {
+              // Clear cart multiple ways
+              await clearCart();
+              forceCartReset();
+              
+              // Clear localStorage directly
+              localStorage.removeItem("cartItems");
+              localStorage.removeItem("cartData");
+              
+              // Dispatch custom event
+              window.dispatchEvent(new CustomEvent('cartCleared'));
+              
+              // Force state reset
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('forceCartReset'));
+              }, 100);
+              
+              console.log("Cart cleared successfully");
+            } catch (error) {
+              console.error("Error clearing cart:", error);
+            }
             
             // Force a small delay to ensure cart clearing is processed
             setTimeout(() => {
@@ -119,7 +157,7 @@ const Verify = () => {
                   return prev - 1;
                 });
               }, 1000);
-            }, 500);
+            }, 1000);
           } else {
                   setStatus("failed");
                 }

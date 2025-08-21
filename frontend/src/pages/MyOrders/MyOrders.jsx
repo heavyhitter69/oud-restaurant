@@ -13,15 +13,29 @@ const MyOrders = () => {
 
 
     const fetchOrders = async () => {
-        const response = await axios.post(url+"/api/order/userorders",{},{headers:{token}});
-        const orders = response.data.data;
-        // Remove duplicates if any
-        const uniqueOrders = orders.filter((order, index, self) => 
-            index === self.findIndex(o => o._id === order._id)
-        );
-        // Sort by date (newest first) to ensure proper ordering
-        const sortedOrders = uniqueOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setData(sortedOrders);
+        try {
+            const response = await axios.post(url+"/api/order/userorders",{},{headers:{token}});
+            const orders = response.data.data;
+            console.log("Raw orders:", orders);
+            
+            // Remove duplicates if any
+            const uniqueOrders = orders.filter((order, index, self) => 
+                index === self.findIndex(o => o._id === order._id)
+            );
+            
+            // Sort by date (newest first) to ensure proper ordering
+            const sortedOrders = uniqueOrders.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                console.log(`Comparing: ${a._id} (${dateA}) vs ${b._id} (${dateB})`);
+                return dateB - dateA;
+            });
+            
+            console.log("Sorted orders:", sortedOrders);
+            setData(sortedOrders);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
     }
 
     const handleTrackOrder = async (order) => {
