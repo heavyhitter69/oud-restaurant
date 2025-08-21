@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Navbar from './components/Navbar/Navbar';
-import { Route, Routes } from 'react-router-dom';
+import Header from './components/Header/Header';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
@@ -16,6 +17,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   const { token } = useContext(StoreContext);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
@@ -37,9 +40,10 @@ const App = () => {
         }}
       />
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+      <ScrollToTop />
+      <Navbar setShowLogin={setShowLogin} />
+      {isHomePage && <Header />}
       <div className='app'>
-        <ScrollToTop />
-        <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/cart' element={<Cart />} />

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import './Home.css'
-import Header from '../../components/Header/Header'
 import Banner from '../../components/Banner/Banner'
 import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
@@ -12,7 +11,6 @@ const Home = () => {
 
   return (
     <div>
-      <Header/>
       <Banner/>
       
       {/* Welcome Message */}
