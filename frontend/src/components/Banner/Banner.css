@@ -383,7 +383,7 @@
 
   .banner-slide img {
     object-fit: contain;
-    background: var(--surface);
+    background: var(--background);
   }
 
   .banner-text-content h2 {
@@ -419,7 +419,7 @@
 
   .banner-slide img {
     object-fit: contain;
-    background: var(--surface);
+    background: var(--background);
     max-width: 100%;
     max-height: 100%;
     width: auto;
@@ -459,7 +459,7 @@
 
   .banner-slide img {
     object-fit: contain;
-    background: var(--surface);
+    background: var(--background);
     max-width: 100%;
     max-height: 100%;
     width: auto;
