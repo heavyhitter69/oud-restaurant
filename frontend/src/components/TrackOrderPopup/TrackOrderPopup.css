@@ -26,6 +26,14 @@
   box-shadow: var(--shadow-xl);
   animation: slideIn 0.3s ease;
   backdrop-filter: blur(10px);
+  /* Hide scrollbar for webkit browsers */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for webkit browsers */
+.track-order-popup::-webkit-scrollbar {
+  display: none;
 }
 
 /* Large screen optimizations */
