@@ -19,7 +19,8 @@ const PlaceOrder = () => {
     food_list, 
     cartItems, 
     url,
-    clearCart
+    clearCart,
+    setCartItems
   } = useContext(StoreContext)
 
   const [data, setData] = useState({
@@ -114,8 +115,13 @@ const PlaceOrder = () => {
       if (response.data.success) {
         const {authorization_url} = response.data;
         
-        // DO NOT clear cart - keep items for failed payment scenarios
-        console.log("Proceeding to payment with cart intact...");
+        // Save cart data before clearing (for failed payment restoration)
+        const cartDataToRestore = { ...cartItems };
+        localStorage.setItem("cartDataToRestore", JSON.stringify(cartDataToRestore));
+        
+        // Clear cart when proceeding to payment (reserve items)
+        console.log("Clearing cart before proceeding to payment...");
+        await clearCart();
         
         // Keep loading state until redirect happens
         setTimeout(() => {

@@ -7,7 +7,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 const Verify = () => {
   const [searchParams] = useSearchParams();
-  const { url, clearCart, forceCartReset } = useContext(StoreContext);
+  const { url, clearCart, forceCartReset, setCartItems } = useContext(StoreContext);
   const navigate = useNavigate();
 
   // Get parameters from both URL search params and hash params
@@ -48,10 +48,7 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // Clear cart ONLY after successful payment
-          console.log("Payment successful - clearing cart...");
-          await clearCart();
-          
+          // Cart is already cleared before payment, just redirect
           setTimeout(() => {
             // Start countdown
             const countdownInterval = setInterval(() => {
@@ -76,7 +73,22 @@ const Verify = () => {
         console.log("Payment cancelled or failed by Paystack");
         setStatus("failed");
         setIsVerifying(false);
-        // Redirect to cart after showing failed message - cart still has items
+        
+        // Restore cart data for failed payment
+        try {
+          const savedCartData = localStorage.getItem("cartDataToRestore");
+          if (savedCartData) {
+            const cartDataToRestore = JSON.parse(savedCartData);
+            console.log("Restoring cart data for failed payment:", cartDataToRestore);
+            setCartItems(cartDataToRestore);
+            localStorage.setItem("cartItems", JSON.stringify(cartDataToRestore));
+            localStorage.removeItem("cartDataToRestore"); // Clean up
+          }
+        } catch (error) {
+          console.error("Failed to restore cart data:", error);
+        }
+        
+        // Redirect to cart after showing failed message
         setTimeout(() => {
           navigate("/cart");
         }, 5000);
@@ -92,10 +104,7 @@ const Verify = () => {
             console.log("Payment verification successful!");
             setStatus("success");
             
-            // Clear cart ONLY after successful payment
-            console.log("Payment successful - clearing cart...");
-            await clearCart();
-            
+            // Cart is already cleared before payment, just redirect
             // Start countdown
             const countdownInterval = setInterval(() => {
               setCountdown(prev => {
@@ -120,10 +129,7 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // Clear cart ONLY after successful payment
-            console.log("Payment successful - clearing cart...");
-            await clearCart();
-            
+            // Cart is already cleared before payment, just redirect
             setTimeout(() => {
               // Start countdown
               const countdownInterval = setInterval(() => {
