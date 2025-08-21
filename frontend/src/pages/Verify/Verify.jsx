@@ -48,7 +48,10 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // Cart is already cleared before payment, just redirect
+          // Clear cart ONLY after successful payment
+          console.log("Payment successful - clearing cart...");
+          await clearCart();
+          
           setTimeout(() => {
             // Start countdown
             const countdownInterval = setInterval(() => {
@@ -73,9 +76,9 @@ const Verify = () => {
         console.log("Payment cancelled or failed by Paystack");
         setStatus("failed");
         setIsVerifying(false);
-        // Redirect to home after showing failed message since cart is empty
+        // Redirect to cart after showing failed message - cart still has items
         setTimeout(() => {
-          navigate("/");
+          navigate("/cart");
         }, 5000);
       } else {
         // No status parameter, but reference exists - this is likely a successful payment
@@ -112,7 +115,10 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // Cart is already cleared before payment, just redirect
+            // Clear cart ONLY after successful payment
+            console.log("Payment successful - clearing cart...");
+            await clearCart();
+            
             setTimeout(() => {
               // Start countdown
               const countdownInterval = setInterval(() => {
@@ -142,7 +148,7 @@ const Verify = () => {
           // Show a more helpful error message with retry options
           setTimeout(() => {
             if (window.confirm("Payment verification failed. Would you like to try again?")) {
-              navigate("/"); // Go to home to re-add items since cart is empty
+              navigate("/cart"); // Go to cart to retry payment since items are still there
             } else {
               navigate("/");
             }
@@ -162,6 +168,11 @@ const Verify = () => {
   return (
     <div className='verify'>
       <div className="verify-container">
+        <div className="verify-header">
+          <h1>Payment Verification</h1>
+          <p>Please wait while we verify your payment</p>
+        </div>
+        
         {status === "verifying" && (
           <>
             <LoadingSpinner size="large" text="Verifying your payment..." />
