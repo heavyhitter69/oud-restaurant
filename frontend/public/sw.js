@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oud-restaurant-v4';
+const CACHE_NAME = 'oud-restaurant-v5';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -41,10 +41,8 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+          console.log('Deleting cache:', cacheName);
+          return caches.delete(cacheName);
         })
       );
     })
