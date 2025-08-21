@@ -5,6 +5,7 @@ import cors from "cors"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import path from "path"
+import fs from "fs"
 import { connectDB } from "./config/db.js"
 import foodRouter from "./routes/foodRoute.js"
 import userRouter from "./routes/userRoute.js"
@@ -135,7 +136,6 @@ connectDB().catch(console.error);
               }
               
               // Check if file exists first
-              const fs = require('fs')
               if (!fs.existsSync(filePath)) {
                 console.log(`Image file does not exist: ${filename}`)
                 res.status(404).send('Image not found')
@@ -158,7 +158,6 @@ connectDB().catch(console.error);
               const filePath = path.join(__dirname, 'uploads', filename)
               
               // Check if file exists first
-              const fs = require('fs')
               if (!fs.existsSync(filePath)) {
                 console.log(`API Image file does not exist: ${filename}`)
                 res.status(404).send('Image not found')
@@ -199,7 +198,6 @@ app.get("/health", (req, res) => {
 
 // Test endpoint to check uploads directory
 app.get("/test-uploads", (req, res) => {
-  const fs = require('fs');
   const uploadsPath = path.join(__dirname, 'uploads');
   
   try {
