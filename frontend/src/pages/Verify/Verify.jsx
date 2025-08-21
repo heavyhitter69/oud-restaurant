@@ -158,13 +158,6 @@ const Verify = () => {
         {status === "verifying" && (
           <>
             <LoadingSpinner size="large" text="Verifying your payment..." />
-            <div style={{marginTop: '1rem', fontSize: '0.9rem', color: '#666'}}>
-              <p>Debug Info:</p>
-              <p>Reference: {reference || 'None'}</p>
-              <p>Trxref: {trxref || 'None'}</p>
-              <p>Status: {status_param || 'None'}</p>
-              <p>API URL: {url}</p>
-            </div>
           </>
         )}
         {status === "success" && (

@@ -40,41 +40,27 @@ const limiter = rateLimit({
 
 app.use(limiter)
 
-// CORS configuration - More permissive for production
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? [
-        'https://oud-restaurant-4nt0.onrender.com',
-        'https://oud-restaurant-admin-yl6p.onrender.com',
-        'https://oud-restaurant-api.onrender.com',
-        'https://oud-restaurant-4nt0.onrender.com/',
-        'https://oud-restaurant-admin-yl6p.onrender.com/',
-        'https://oud-restaurant-api.onrender.com/'
-      ]
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+// CORS configuration - Allow all origins for now
+app.use(cors({
+  origin: true, // Allow all origins
   credentials: true,
-  optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'X-Requested-With', 'Origin', 'Accept'],
-  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}
-
-app.use(cors(corsOptions))
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar', 'Authorization']
+}));
 
 // Additional CORS headers for all responses
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token');
   
   if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
+    res.status(200).end();
+    return;
   }
+  next();
 });
 
 // Body parsing middleware

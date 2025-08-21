@@ -279,9 +279,25 @@ const StoreContextProvider = (props) => {
 
   // Logout function
   const logout = useCallback(() => {
+    console.log("Logging out user...");
     setTokenAndPersist("");
     setCartItemsAndPersist({});
+    setCartClearedAfterOrder(false);
+    setCartLoaded(false);
+    setAppliedPromo(null);
+    // Clear all localStorage
+    localStorage.clear();
+    // Force page refresh to ensure clean state
+    window.location.reload();
   }, [setTokenAndPersist, setCartItemsAndPersist]);
+
+  // Force logout - more aggressive clearing
+  const forceLogout = useCallback(() => {
+    console.log("Force logging out user...");
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "/";
+  }, []);
 
   // Initialize app
   useEffect(() => {
@@ -342,6 +358,7 @@ const StoreContextProvider = (props) => {
     userData,
     setToken: setTokenAndPersist,
     logout,
+    forceLogout,
     loadCartData
   };
 
