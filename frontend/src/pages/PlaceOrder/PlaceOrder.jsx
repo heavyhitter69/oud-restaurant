@@ -18,7 +18,8 @@ const PlaceOrder = () => {
     userData,
     food_list, 
     cartItems, 
-    url 
+    url,
+    clearCart
   } = useContext(StoreContext)
 
   const [data, setData] = useState({
@@ -112,6 +113,11 @@ const PlaceOrder = () => {
       let response = await axios.post(url+"/api/order/place",orderData,{headers:{token}});
       if (response.data.success) {
         const {authorization_url} = response.data;
+        
+        // Clear cart BEFORE redirecting to payment
+        console.log("Clearing cart before payment redirect...");
+        await clearCart();
+        
         // Keep loading state until redirect happens
         setTimeout(() => {
           window.location.replace(authorization_url);

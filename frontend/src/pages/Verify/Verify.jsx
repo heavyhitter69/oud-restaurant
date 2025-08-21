@@ -48,33 +48,14 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // ULTRA AGGRESSIVE cart clearing
-          try {
-            console.log("🚨 ULTRA AGGRESSIVE CART CLEARING INITIATED...");
-            
-            // Use the ultra aggressive clearCart function
-            await clearCart();
-            
-            // Additional ultra aggressive events
-            window.dispatchEvent(new CustomEvent('cartAnnihilated'));
-            
-            console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
-          } catch (error) {
-            console.error("❌ Ultra aggressive cart clearing failed:", error);
-            // Fallback: force page refresh immediately
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }
-          
-          // Force a small delay to ensure cart clearing is processed
+          // Cart is already cleared before payment, just redirect
           setTimeout(() => {
             // Start countdown
             const countdownInterval = setInterval(() => {
               setCountdown(prev => {
                 if (prev <= 1) {
                   clearInterval(countdownInterval);
-                  // Force page refresh to ensure cart is cleared
+                  // Navigate to orders page
                   window.location.href = "/#/myorders";
                   return 0;
                 }
@@ -92,6 +73,10 @@ const Verify = () => {
         console.log("Payment cancelled or failed by Paystack");
         setStatus("failed");
         setIsVerifying(false);
+        // Redirect to home after showing failed message since cart is empty
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
       } else {
         // No status parameter, but reference exists - this is likely a successful payment
         const ref = reference || trxref;
@@ -127,33 +112,14 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // ULTRA AGGRESSIVE cart clearing
-            try {
-              console.log("🚨 ULTRA AGGRESSIVE CART CLEARING INITIATED...");
-              
-              // Use the ultra aggressive clearCart function
-              await clearCart();
-              
-              // Additional ultra aggressive events
-              window.dispatchEvent(new CustomEvent('cartAnnihilated'));
-              
-              console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
-            } catch (error) {
-              console.error("❌ Ultra aggressive cart clearing failed:", error);
-              // Fallback: force page refresh immediately
-              setTimeout(() => {
-                window.location.reload();
-              }, 1000);
-            }
-            
-            // Force a small delay to ensure cart clearing is processed
+            // Cart is already cleared before payment, just redirect
             setTimeout(() => {
               // Start countdown
               const countdownInterval = setInterval(() => {
                 setCountdown(prev => {
                   if (prev <= 1) {
                     clearInterval(countdownInterval);
-                    // Force page refresh to ensure cart is cleared
+                    // Navigate to orders page
                     window.location.href = "/#/myorders";
                     return 0;
                   }
@@ -176,7 +142,7 @@ const Verify = () => {
           // Show a more helpful error message with retry options
           setTimeout(() => {
             if (window.confirm("Payment verification failed. Would you like to try again?")) {
-              navigate("/cart");
+              navigate("/"); // Go to home to re-add items since cart is empty
             } else {
               navigate("/");
             }
