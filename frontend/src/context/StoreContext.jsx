@@ -325,15 +325,7 @@ const StoreContextProvider = (props) => {
     }
   }, [token, setCartItemsAndPersist]);
 
-  // Persist cart to localStorage whenever it changes
-  useEffect(() => {
-    if (Object.keys(cartItems).length > 0) {
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    } else {
-      // Clear localStorage when cart is empty
-      localStorage.removeItem("cartItems");
-    }
-  }, [cartItems]);
+  // REMOVED: localStorage persistence - using server-only cart management
 
   const contextValue = {
     food_list,

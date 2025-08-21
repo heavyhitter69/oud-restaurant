@@ -74,21 +74,7 @@ const Verify = () => {
         setStatus("failed");
         setIsVerifying(false);
         
-        // Restore cart data for failed payment
-        try {
-          const savedCartData = localStorage.getItem("cartDataToRestore");
-          if (savedCartData) {
-            const cartDataToRestore = JSON.parse(savedCartData);
-            console.log("Restoring cart data for failed payment:", cartDataToRestore);
-            setCartItems(cartDataToRestore);
-            localStorage.setItem("cartItems", JSON.stringify(cartDataToRestore));
-            localStorage.removeItem("cartDataToRestore"); // Clean up
-          }
-        } catch (error) {
-          console.error("Failed to restore cart data:", error);
-        }
-        
-        // Redirect to cart after showing failed message
+        // Redirect to cart after showing failed message (server cart will be empty)
         setTimeout(() => {
           navigate("/cart");
         }, 5000);

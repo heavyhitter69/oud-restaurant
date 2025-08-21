@@ -115,11 +115,7 @@ const PlaceOrder = () => {
       if (response.data.success) {
         const {authorization_url} = response.data;
         
-        // Save cart data before clearing (for failed payment restoration)
-        const cartDataToRestore = { ...cartItems };
-        localStorage.setItem("cartDataToRestore", JSON.stringify(cartDataToRestore));
-        
-        // Clear cart when proceeding to payment (reserve items)
+        // Clear cart when proceeding to payment (server-only)
         console.log("Clearing cart before proceeding to payment...");
         await clearCart();
         
