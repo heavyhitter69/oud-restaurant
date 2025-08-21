@@ -107,32 +107,52 @@ const StoreContextProvider = (props) => {
     });
   }, [token, url, setCartItemsAndPersist]);
 
-  // Clear cart completely
+  // Clear cart completely - ULTRA AGGRESSIVE
   const clearCart = useCallback(async () => {
-    console.log("Clearing cart...");
+    console.log("🚨 ULTRA AGGRESSIVE CART CLEARING STARTED...");
     
-    // Clear all cart-related state immediately
+    // STEP 1: Clear all state immediately
     setCartItems({});
-    setCartVersion(prev => prev + 1); // Force re-render
-    setCartClearedAfterOrder(true); // Mark that cart was cleared after order
+    setCartVersion(prev => prev + 1);
+    setCartClearedAfterOrder(true);
     
-    // Clear localStorage immediately
+    // STEP 2: Clear all localStorage
     localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartData");
+    sessionStorage.removeItem("cartItems");
     
-    // Force a small delay to ensure state updates
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // STEP 3: Dispatch multiple events
+    window.dispatchEvent(new CustomEvent('cartCleared'));
+    window.dispatchEvent(new CustomEvent('forceCartReset'));
     
-    // Sync with server in background (non-blocking)
+    // STEP 4: Force component re-renders
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('cartCleared'));
+      setCartVersion(prev => prev + 1);
+    }, 50);
+    
+    // STEP 5: Clear server cart
     if (token) {
       try {
         await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
-        console.log("Cart cleared on server");
+        console.log("✅ Cart cleared on server");
       } catch (error) {
-        console.error("Failed to clear cart on server:", error);
+        console.error("❌ Failed to clear cart on server:", error);
       }
     }
     
-    console.log("Cart clearing completed");
+    // STEP 6: Final verification
+    setTimeout(() => {
+      const remainingCart = localStorage.getItem("cartItems");
+      if (remainingCart && remainingCart !== "{}") {
+        console.log("🚨 Cart still has data, forcing final clear...");
+        localStorage.removeItem("cartItems");
+        setCartItems({});
+        window.dispatchEvent(new CustomEvent('cartCleared'));
+      }
+      console.log("✅ ULTRA AGGRESSIVE CART CLEARING COMPLETED");
+    }, 200);
+    
   }, [token, url]);
 
   // Force cart reset - more aggressive clearing
@@ -383,3 +403,4 @@ const StoreContextProvider = (props) => {
 };
 
 export default StoreContextProvider;
+

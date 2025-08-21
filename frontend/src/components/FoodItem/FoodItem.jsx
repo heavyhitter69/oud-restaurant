@@ -7,18 +7,30 @@ const FoodItem = ({ id, name, price, description, image }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
-  // Listen for cart clearing events
+  // Listen for cart clearing events - ENHANCED
   useEffect(() => {
     const handleCartCleared = () => {
+      console.log("🔄 FoodItem: Cart cleared event received");
+      setLocalCartItems({});
+    };
+
+    const handleForceCartReset = () => {
+      console.log("🔄 FoodItem: Force cart reset event received");
       setLocalCartItems({});
     };
 
     window.addEventListener('cartCleared', handleCartCleared);
-    return () => window.removeEventListener('cartCleared', handleCartCleared);
+    window.addEventListener('forceCartReset', handleForceCartReset);
+    
+    return () => {
+      window.removeEventListener('cartCleared', handleCartCleared);
+      window.removeEventListener('forceCartReset', handleForceCartReset);
+    };
   }, []);
 
-  // Update local cart items when context changes
+  // Update local cart items when context changes - ENHANCED
   useEffect(() => {
+    console.log("🔄 FoodItem: Cart context updated", cartItems);
     setLocalCartItems(cartItems);
   }, [cartItems, cartVersion]);
 

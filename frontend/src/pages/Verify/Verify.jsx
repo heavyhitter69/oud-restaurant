@@ -48,27 +48,36 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // Aggressive cart clearing
+          // ULTRA AGGRESSIVE cart clearing
           try {
+            console.log("🚨 Starting ULTRA AGGRESSIVE cart clearing...");
+            
             // Clear cart multiple ways
             await clearCart();
             forceCartReset();
             
-            // Clear localStorage directly
+            // Additional aggressive clearing
             localStorage.removeItem("cartItems");
             localStorage.removeItem("cartData");
+            sessionStorage.removeItem("cartItems");
             
-            // Dispatch custom event
+            // Dispatch multiple events
             window.dispatchEvent(new CustomEvent('cartCleared'));
+            window.dispatchEvent(new CustomEvent('forceCartReset'));
             
-            // Force state reset
+            // Force multiple state resets
             setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('cartCleared'));
               window.dispatchEvent(new CustomEvent('forceCartReset'));
-            }, 100);
+            }, 50);
             
-            console.log("Cart cleared successfully");
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('cartCleared'));
+            }, 150);
+            
+            console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
           } catch (error) {
-            console.error("Error clearing cart:", error);
+            console.error("❌ Error clearing cart:", error);
           }
           
           // Force a small delay to ensure cart clearing is processed
@@ -131,27 +140,36 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // Aggressive cart clearing
+            // ULTRA AGGRESSIVE cart clearing
             try {
+              console.log("🚨 Starting ULTRA AGGRESSIVE cart clearing...");
+              
               // Clear cart multiple ways
               await clearCart();
               forceCartReset();
               
-              // Clear localStorage directly
+              // Additional aggressive clearing
               localStorage.removeItem("cartItems");
               localStorage.removeItem("cartData");
+              sessionStorage.removeItem("cartItems");
               
-              // Dispatch custom event
+              // Dispatch multiple events
               window.dispatchEvent(new CustomEvent('cartCleared'));
+              window.dispatchEvent(new CustomEvent('forceCartReset'));
               
-              // Force state reset
+              // Force multiple state resets
               setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('cartCleared'));
                 window.dispatchEvent(new CustomEvent('forceCartReset'));
-              }, 100);
+              }, 50);
               
-              console.log("Cart cleared successfully");
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('cartCleared'));
+              }, 150);
+              
+              console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
             } catch (error) {
-              console.error("Error clearing cart:", error);
+              console.error("❌ Error clearing cart:", error);
             }
             
             // Force a small delay to ensure cart clearing is processed

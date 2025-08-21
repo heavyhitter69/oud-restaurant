@@ -98,6 +98,8 @@
   border-radius: 50%;
   background: var(--surface);
   border: 1px solid var(--border);
+  /* Ensure search icon is always visible */
+  z-index: 10;
 }
 
 .navbar-search-icon:hover {
@@ -424,23 +426,42 @@
         display: none;
     }
     .navbar-search-input {
-        width: 150px;
+        width: 140px;
+        font-size: 14px;
+        padding: 0.5rem 2rem 0.5rem 0.75rem;
     }
     .navbar-right {
         gap: 0.75rem;
     }
     /* Keep search container visible on mobile */
     .navbar-search-container {
-        display: flex;
+        display: flex !important;
+        min-width: 140px;
     }
 }
 
 @media (max-width: 480px) {
     .navbar .logo {
-        width: 120px;
+        width: 100px;
     }
     .navbar-right {
         gap: 0.5rem;
+    }
+    .navbar-search-input {
+        width: 120px;
+        font-size: 13px;
+        padding: 0.4rem 1.5rem 0.4rem 0.6rem;
+    }
+    .navbar-search-container {
+        display: flex !important;
+        min-width: 120px;
+    }
+    .navbar-search-icon {
+        width: 35px;
+        height: 35px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
     }
     .navbar-profile {
         width: 35px;
@@ -449,5 +470,26 @@
     .nav-profile-dropdown {
         min-width: 160px;
         right: -10px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .navbar .logo {
+        width: 80px;
+    }
+    .navbar-search-input {
+        width: 100px;
+        font-size: 12px;
+    }
+    .navbar-search-container {
+        min-width: 100px;
+    }
+    .navbar-search-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .navbar-right {
+        gap: 0.3rem;
     }
 }
