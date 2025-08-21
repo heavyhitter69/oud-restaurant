@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oud-restaurant-v3';
+const CACHE_NAME = 'oud-restaurant-v4';
 const urlsToCache = [
   '/',
   '/index.html',
