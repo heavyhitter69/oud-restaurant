@@ -34,22 +34,15 @@
     width: 100%;
     scroll-behavior: smooth;
 }
+/* Hide scrollbar for webkit browsers */
 .explore-menu-list::-webkit-scrollbar{
-    height: 6px;
+    display: none;
 }
 
-.explore-menu-list::-webkit-scrollbar-track{
-    background: var(--surface);
-    border-radius: 3px;
-}
-
-.explore-menu-list::-webkit-scrollbar-thumb{
-    background: var(--border);
-    border-radius: 3px;
-}
-
-.explore-menu-list::-webkit-scrollbar-thumb:hover{
-    background: var(--border-hover);
+/* Hide scrollbar for Firefox */
+.explore-menu-list {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 .explore-menu-list-item{
     display: flex;
