@@ -13,28 +13,6 @@ const Home = () => {
     <div>
       <Banner/>
       
-      {/* Welcome Message */}
-      <div className="welcome-message">
-        <div className="welcome-container">
-          <h1>Welcome to Oud Restaurant</h1>
-          <p>Discover our delicious menu featuring fresh ingredients and authentic flavors. From savory salads to mouthwatering desserts, we have something for everyone.</p>
-          <div className="welcome-features">
-            <div className="feature">
-              <span>🍽️</span>
-              <p>Fresh Ingredients</p>
-            </div>
-            <div className="feature">
-              <span>🚚</span>
-              <p>Fast Delivery</p>
-            </div>
-            <div className="feature">
-              <span>⭐</span>
-              <p>Quality Service</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <ExploreMenu category={category} setCategory={setCategory}/>
       <FoodDisplay category={category}/>
       <AppDownload/>
