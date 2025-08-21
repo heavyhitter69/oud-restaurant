@@ -10,6 +10,11 @@
     z-index: 100;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .navbar .logo {
@@ -338,6 +343,14 @@
 }
 
 /* RESPONSIVE DESIGN - PROFESSIONAL MOBILE SUPPORT */
+@media (max-width: 1400px) {
+    .navbar {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
 @media (max-width: 1050px) {
     .navbar .logo {
         width: 160px;

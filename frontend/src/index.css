@@ -202,7 +202,7 @@ a {
 
 .app {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
   min-height: 100vh;
@@ -211,7 +211,7 @@ a {
 }
 
 /* Responsive container */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
   .app {
     max-width: 100%;
     padding: 0 1rem;
