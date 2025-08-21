@@ -289,13 +289,7 @@ const StoreContextProvider = (props) => {
     window.location.reload();
   }, [setTokenAndPersist, setCartItemsAndPersist]);
 
-  // Force logout - more aggressive clearing
-  const forceLogout = useCallback(() => {
-    console.log("Force logging out user...");
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = "/";
-  }, []);
+
 
   // Initialize app
   useEffect(() => {
@@ -356,7 +350,6 @@ const StoreContextProvider = (props) => {
     userData,
     setToken: setTokenAndPersist,
     logout,
-    forceLogout,
     loadCartData
   };
 
