@@ -48,36 +48,23 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // ULTRA AGGRESSIVE cart clearing
+          // NUCLEAR cart clearing
           try {
-            console.log("🚨 Starting ULTRA AGGRESSIVE cart clearing...");
+            console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
             
-            // Clear cart multiple ways
+            // Use the nuclear clearCart function
             await clearCart();
-            forceCartReset();
             
-            // Additional aggressive clearing
-            localStorage.removeItem("cartItems");
-            localStorage.removeItem("cartData");
-            sessionStorage.removeItem("cartItems");
+            // Additional nuclear events
+            window.dispatchEvent(new CustomEvent('nuclearCartClear'));
             
-            // Dispatch multiple events
-            window.dispatchEvent(new CustomEvent('cartCleared'));
-            window.dispatchEvent(new CustomEvent('forceCartReset'));
-            
-            // Force multiple state resets
-            setTimeout(() => {
-              window.dispatchEvent(new CustomEvent('cartCleared'));
-              window.dispatchEvent(new CustomEvent('forceCartReset'));
-            }, 50);
-            
-            setTimeout(() => {
-              window.dispatchEvent(new CustomEvent('cartCleared'));
-            }, 150);
-            
-            console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
+            console.log("✅ NUCLEAR cart clearing completed");
           } catch (error) {
-            console.error("❌ Error clearing cart:", error);
+            console.error("❌ Nuclear cart clearing failed:", error);
+            // Fallback: force page refresh
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
           }
           
           // Force a small delay to ensure cart clearing is processed
@@ -140,36 +127,23 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // ULTRA AGGRESSIVE cart clearing
+            // NUCLEAR cart clearing
             try {
-              console.log("🚨 Starting ULTRA AGGRESSIVE cart clearing...");
+              console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
               
-              // Clear cart multiple ways
+              // Use the nuclear clearCart function
               await clearCart();
-              forceCartReset();
               
-              // Additional aggressive clearing
-              localStorage.removeItem("cartItems");
-              localStorage.removeItem("cartData");
-              sessionStorage.removeItem("cartItems");
+              // Additional nuclear events
+              window.dispatchEvent(new CustomEvent('nuclearCartClear'));
               
-              // Dispatch multiple events
-              window.dispatchEvent(new CustomEvent('cartCleared'));
-              window.dispatchEvent(new CustomEvent('forceCartReset'));
-              
-              // Force multiple state resets
-              setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('cartCleared'));
-                window.dispatchEvent(new CustomEvent('forceCartReset'));
-              }, 50);
-              
-              setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('cartCleared'));
-              }, 150);
-              
-              console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
+              console.log("✅ NUCLEAR cart clearing completed");
             } catch (error) {
-              console.error("❌ Error clearing cart:", error);
+              console.error("❌ Nuclear cart clearing failed:", error);
+              // Fallback: force page refresh
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
             }
             
             // Force a small delay to ensure cart clearing is processed

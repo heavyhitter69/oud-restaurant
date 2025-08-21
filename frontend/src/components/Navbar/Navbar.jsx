@@ -49,27 +49,26 @@ const Navbar = ({ setShowLogin }) => {
       </ul>
 
       <div className="navbar-right">
-        {isHomePage && (
-          <div className="navbar-search-container">
-            <input
-              type="text"
-              placeholder="Search food..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="navbar-search-input"
-            />
-            <img src={assets.search_icon} alt="" className="navbar-search-icon-actual" />
-            {search && filteredResults.length > 0 && (
-              <div className="search-suggestions">
-                {filteredResults.map(item => (
-                  <p key={item._id} onClick={() => handleSuggestionClick(item._id)}>
-                    {item.name}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {/* Search container - ALWAYS visible on mobile, conditional on desktop */}
+        <div className={`navbar-search-container ${!isHomePage ? 'mobile-only' : ''}`}>
+          <input
+            type="text"
+            placeholder="Search food..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="navbar-search-input"
+          />
+          <img src={assets.search_icon} alt="" className="navbar-search-icon-actual" />
+          {search && filteredResults.length > 0 && (
+            <div className="search-suggestions">
+              {filteredResults.map(item => (
+                <p key={item._id} onClick={() => handleSuggestionClick(item._id)}>
+                  {item.name}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="navbar-search-icon">
           <Link to='/cart'>

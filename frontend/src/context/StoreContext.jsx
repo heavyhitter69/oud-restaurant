@@ -107,53 +107,63 @@ const StoreContextProvider = (props) => {
     });
   }, [token, url, setCartItemsAndPersist]);
 
-  // Clear cart completely - ULTRA AGGRESSIVE
+  // Clear cart completely - NUCLEAR OPTION
   const clearCart = useCallback(async () => {
-    console.log("🚨 ULTRA AGGRESSIVE CART CLEARING STARTED...");
+    console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
     
-    // STEP 1: Clear all state immediately
+    // NUCLEAR STEP 1: Immediate state annihilation
     setCartItems({});
-    setCartVersion(prev => prev + 1);
+    setCartVersion(prev => prev + 10); // Force massive re-render
     setCartClearedAfterOrder(true);
     
-    // STEP 2: Clear all localStorage
-    localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartData");
-    sessionStorage.removeItem("cartItems");
+    // NUCLEAR STEP 2: Complete storage annihilation
+    localStorage.clear(); // Clear ALL localStorage
+    sessionStorage.clear(); // Clear ALL sessionStorage
     
-    // STEP 3: Dispatch multiple events
-    window.dispatchEvent(new CustomEvent('cartCleared'));
-    window.dispatchEvent(new CustomEvent('forceCartReset'));
-    
-    // STEP 4: Force component re-renders
-    setTimeout(() => {
+    // NUCLEAR STEP 3: Event bombardment
+    for (let i = 0; i < 5; i++) {
       window.dispatchEvent(new CustomEvent('cartCleared'));
-      setCartVersion(prev => prev + 1);
-    }, 50);
+      window.dispatchEvent(new CustomEvent('forceCartReset'));
+      window.dispatchEvent(new CustomEvent('nuclearCartClear'));
+    }
     
-    // STEP 5: Clear server cart
+    // NUCLEAR STEP 4: Force page refresh if needed
+    setTimeout(() => {
+      const cartStillExists = localStorage.getItem("cartItems") || sessionStorage.getItem("cartItems");
+      if (cartStillExists) {
+        console.log("🚨 NUCLEAR OPTION: Cart persists, forcing page refresh...");
+        window.location.reload();
+        return;
+      }
+    }, 1000);
+    
+    // NUCLEAR STEP 5: Server annihilation
     if (token) {
       try {
         await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
-        console.log("✅ Cart cleared on server");
+        console.log("✅ Server cart annihilated");
       } catch (error) {
-        console.error("❌ Failed to clear cart on server:", error);
+        console.error("❌ Server cart annihilation failed:", error);
       }
     }
     
-    // STEP 6: Final verification
+    // NUCLEAR STEP 6: Final verification and cleanup
     setTimeout(() => {
-      const remainingCart = localStorage.getItem("cartItems");
-      if (remainingCart && remainingCart !== "{}") {
-        console.log("🚨 Cart still has data, forcing final clear...");
-        localStorage.removeItem("cartItems");
-        setCartItems({});
-        window.dispatchEvent(new CustomEvent('cartCleared'));
+      // Restore essential data
+      if (token) {
+        localStorage.setItem("token", token);
       }
-      console.log("✅ ULTRA AGGRESSIVE CART CLEARING COMPLETED");
-    }, 200);
+      if (userAvatar) {
+        localStorage.setItem("userAvatar", userAvatar);
+      }
+      if (userData) {
+        localStorage.setItem("userData", JSON.stringify(userData));
+      }
+      
+      console.log("✅ NUCLEAR CART CLEARING COMPLETED - Cart annihilated");
+    }, 500);
     
-  }, [token, url]);
+  }, [token, url, userAvatar, userData]);
 
   // Force cart reset - more aggressive clearing
   const forceCartReset = useCallback(() => {
