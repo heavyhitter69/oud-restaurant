@@ -9,7 +9,7 @@ const addToCart = async (req, res) => {
     cartData[req.body.itemId] = (cartData[req.body.itemId] || 0) + 1;
     
     await userModel.findByIdAndUpdate(req.body.userId, { cartData });
-    res.json({ success: true, message: "Added To Cart" });
+    res.json({ success: true, message: "Added To Cart", cartData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server Error" });
@@ -30,7 +30,7 @@ const removeFromCart = async (req, res) => {
     }
     
     await userModel.findByIdAndUpdate(req.body.userId, { cartData });
-    res.json({ success: true, message: "Removed From Cart" });
+    res.json({ success: true, message: "Removed From Cart", cartData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server Error" });
@@ -63,7 +63,7 @@ const syncCart = async (req, res) => {
 const clearCart = async (req, res) => {
   try {
     await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
-    res.json({ success: true, message: "Cart cleared successfully" });
+    res.json({ success: true, message: "Cart cleared successfully", cartData: {} });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server Error" });

@@ -58,53 +58,87 @@ const StoreContextProvider = (props) => {
     localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   }, []);
 
-  // Add to cart - SIMPLIFIED (localStorage only)
+  // Add to cart - SERVER ONLY
   const addToCart = useCallback(async (itemId) => {
     console.log("Adding to cart:", itemId);
-    setCartItemsAndPersist(prevCartItems => {
-      const newCartItems = {
-        ...prevCartItems,
-        [itemId]: (prevCartItems[itemId] || 0) + 1
-      };
-      console.log("New cart items:", newCartItems);
-      return newCartItems;
-    });
-  }, [setCartItemsAndPersist]);
-
-  // Remove from cart - SIMPLIFIED (localStorage only)
-  const removeFromCart = useCallback(async (itemId) => {
-    setCartItemsAndPersist(prevCartItems => {
-      const newCartItems = {...prevCartItems};
+    
+    if (!token) {
+      console.error("No token available for cart operation");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
+      console.log("Add to cart response:", response.data);
       
-      if (newCartItems[itemId] > 0) {
-        newCartItems[itemId] -= 1;
-        if (newCartItems[itemId] === 0) {
-          delete newCartItems[itemId];
-        }
+      if (response.data.success) {
+        // Update local state with server response
+        setCartItems(response.data.cartData || {});
+        console.log("Cart updated from server:", response.data.cartData);
       }
-      
-      return newCartItems;
-    });
-  }, [setCartItemsAndPersist]);
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
+  }, [token, url]);
 
-  // Clear cart completely - SIMPLIFIED (localStorage only)
+  // Remove from cart - SERVER ONLY
+  const removeFromCart = useCallback(async (itemId) => {
+    console.log("Removing from cart:", itemId);
+    
+    if (!token) {
+      console.error("No token available for cart operation");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
+      console.log("Remove from cart response:", response.data);
+      
+      if (response.data.success) {
+        // Update local state with server response
+        setCartItems(response.data.cartData || {});
+        console.log("Cart updated from server:", response.data.cartData);
+      }
+    } catch (error) {
+      console.error("Failed to remove from cart:", error);
+    }
+  }, [token, url]);
+
+  // Clear cart completely - SERVER ONLY
   const clearCart = useCallback(async () => {
-    console.log("🧹 CLEARING CART (localStorage only)...");
+    console.log("🧹 CLEARING CART (server only)...");
     
-    // Clear state immediately
-    setCartItems({});
-    setCartVersion(prev => prev + 1);
-    setCartClearedAfterOrder(true);
-    setCartLoaded(true); // Prevent reloading
+    if (!token) {
+      console.error("No token available for cart operation");
+      return;
+    }
     
-    // Clear localStorage
-    localStorage.removeItem("cartItems");
-    
-    // Dispatch event for components
-    window.dispatchEvent(new CustomEvent('cartCleared'));
-    
-    console.log("✅ Cart cleared successfully (localStorage only)");
-  }, []);
+    try {
+      // Clear cart on server
+      const response = await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
+      console.log("Server clear cart response:", response.data);
+      
+      if (response.data.success) {
+        // Clear local state
+        setCartItems({});
+        setCartVersion(prev => prev + 1);
+        setCartClearedAfterOrder(true);
+        setCartLoaded(true);
+        
+        // Clear localStorage
+        localStorage.removeItem("cartItems");
+        
+        // Dispatch event for components
+        window.dispatchEvent(new CustomEvent('cartCleared'));
+        
+        console.log("✅ Cart cleared successfully (server only)");
+      } else {
+        console.error("❌ Server failed to clear cart:", response.data.message);
+      }
+    } catch (error) {
+      console.error("❌ Failed to clear cart on server:", error);
+    }
+  }, [token, url]);
 
   // Force cart reset - more aggressive clearing
   const forceCartReset = useCallback(() => {
@@ -187,7 +221,7 @@ const StoreContextProvider = (props) => {
     }
   }, [url]);
 
-  // Load cart data - SIMPLIFIED (localStorage only)
+  // Load cart data - SERVER ONLY
   const loadCartData = useCallback(async (token) => {
     if (cartLoaded) {
       console.log("Cart already loaded, skipping...");
@@ -195,31 +229,24 @@ const StoreContextProvider = (props) => {
     }
     
     try {
-      console.log("Loading cart data from localStorage only");
+      console.log("Loading cart data from server only");
+      const response = await axios.post(url + "/api/cart/get", {}, { headers: { token } });
+      console.log("Server cart response:", response.data);
       
-      // Only load from localStorage, don't sync with server
-      let currentCartItems = {};
-      try {
-        const savedCart = localStorage.getItem("cartItems");
-        if (savedCart && savedCart !== "undefined" && savedCart !== "null") {
-          currentCartItems = JSON.parse(savedCart);
-          console.log("Loaded cart from localStorage:", currentCartItems);
-        }
-      } catch (error) {
-        console.error("Error parsing localStorage cart:", error);
-        localStorage.removeItem("cartItems");
-      }
+      const serverCartData = response.data.cartData || {};
+      console.log("Server cart data:", serverCartData);
       
-      // Set cart items from localStorage only
-      setCartItemsAndPersist(currentCartItems);
+      // Set cart items from server only
+      setCartItems(serverCartData);
       setCartLoaded(true);
       
-      console.log("Cart loading completed");
+      console.log("Cart loading completed from server");
     } catch (error) {
-      console.error("Failed to load cart:", error);
-      setCartLoaded(true); // Mark as loaded even if error
+      console.error("Failed to load cart from server:", error);
+      setCartItems({}); // Set empty cart on error
+      setCartLoaded(true);
     }
-  }, [setCartItemsAndPersist, cartLoaded]);
+  }, [url, cartLoaded]);
 
   // Custom setToken function that also updates localStorage
   const setTokenAndPersist = useCallback((newToken, avatar = "", userInfo = null) => {
