@@ -52,25 +52,9 @@ const limiter = rateLimit({
 
 app.use(limiter)
 
-// CORS configuration - Production ready
-const allowedOrigins = [
-  'https://oud-restaurant-4nt0.onrender.com',
-  'https://oud-restaurant-admin-yl6p.onrender.com',
-  'http://localhost:5173',
-  'http://localhost:3000'
-];
-
+// CORS configuration - Allow all origins for now
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'X-Requested-With', 'Origin', 'Accept'],
@@ -79,10 +63,7 @@ app.use(cors({
 
 // Additional CORS headers for all responses
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token');
