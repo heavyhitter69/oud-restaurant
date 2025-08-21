@@ -131,6 +131,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .banner-text-overlay {
@@ -255,6 +256,12 @@
   .banner-content-wrapper {
     width: 100%;
     height: 400px;
+    max-height: 80vh;
+  }
+
+  .banner-slide img {
+    object-fit: contain;
+    background: var(--surface);
   }
 
   .banner-text-content h2 {
@@ -287,6 +294,12 @@
 
   .banner-content-wrapper {
     height: 350px;
+    max-height: 75vh;
+  }
+
+  .banner-slide img {
+    object-fit: contain;
+    background: var(--surface);
   }
 
   .banner-text-content h2 {
@@ -315,12 +328,49 @@
 @media (max-width: 360px) {
   .banner-content-wrapper {
     height: 300px;
+    max-height: 70vh;
+  }
+
+  .banner-slide img {
+    object-fit: contain;
+    background: var(--surface);
   }
 
   .banner-text-content h2 {
     font-size: 1.25rem;
   }
 
+  .banner-text-content p {
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape orientation fixes for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .banner-content-wrapper {
+    height: 250px;
+    max-height: 85vh;
+  }
+  
+  .banner-text-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .banner-text-content p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) and (orientation: landscape) {
+  .banner-content-wrapper {
+    height: 200px;
+    max-height: 80vh;
+  }
+  
+  .banner-text-content h2 {
+    font-size: 1.25rem;
+  }
+  
   .banner-text-content p {
     font-size: 0.75rem;
   }
