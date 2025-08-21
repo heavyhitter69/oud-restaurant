@@ -3,14 +3,14 @@
     background: url('/header_img.png') no-repeat;
     background-size: cover;
     background-position: center;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100vw;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     margin-top: 30px;
     margin-bottom: 30px;
+    z-index: 1;
 }
 .header-contents{
     position: absolute;
@@ -48,10 +48,8 @@
     }
     .header{
         width: 100vw;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
+        left: 0;
+        right: 0;
     }
 }
 @media (max-width:750px) {
@@ -66,9 +64,7 @@
     }
     .header{
         width: 100vw;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
+        left: 0;
+        right: 0;
     }
 }

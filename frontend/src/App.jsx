@@ -42,7 +42,11 @@ const App = () => {
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
       <ScrollToTop />
       <Navbar setShowLogin={setShowLogin} />
-      {isHomePage && <Header />}
+      {isHomePage && (
+        <div style={{ position: 'relative', height: '34vw', marginTop: '30px', marginBottom: '30px' }}>
+          <Header />
+        </div>
+      )}
       <div className='app'>
         <Routes>
           <Route path='/' element={<Home />} />
