@@ -198,11 +198,13 @@ app.get("/health", (req, res) => {
 
 // Test endpoint to check uploads directory
 app.get("/test-uploads", (req, res) => {
-  const uploadsPath = path.join(__dirname, 'uploads');
-  
   try {
+    const uploadsPath = path.join(__dirname, 'uploads');
+    console.log('Checking uploads path:', uploadsPath);
+    
     if (fs.existsSync(uploadsPath)) {
       const files = fs.readdirSync(uploadsPath);
+      console.log('Found files:', files.length);
       res.json({
         success: true,
         uploadsPath,
@@ -210,6 +212,7 @@ app.get("/test-uploads", (req, res) => {
         files: files.slice(0, 10) // Show first 10 files
       });
     } else {
+      console.log('Uploads directory does not exist');
       res.json({
         success: false,
         message: "Uploads directory does not exist",
@@ -217,10 +220,12 @@ app.get("/test-uploads", (req, res) => {
       });
     }
   } catch (error) {
-    res.json({
+    console.error('Error in test-uploads:', error);
+    res.status(500).json({
       success: false,
       message: "Error reading uploads directory",
-      error: error.message
+      error: error.message,
+      stack: error.stack
     });
   }
 });
@@ -230,6 +235,15 @@ app.get("/test-verify", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Verify endpoint is accessible",
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Simple test endpoint
+app.get("/test-simple", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Simple test endpoint working",
     timestamp: new Date().toISOString()
   })
 })
