@@ -401,36 +401,76 @@
 /* Ultra small screens */
 @media (max-width: 240px) {
   .banner-content-wrapper {
-    height: 180px;
-    max-height: 45vh;
-    width: 99vw;
+    height: 160px;
+    max-height: 40vh;
+    width: 99.5vw;
   }
 
   .banner-slide img {
     object-fit: contain;
     background: var(--surface);
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .banner-text-content h2 {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .banner-text-content p {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
   }
 
   .banner-text-content {
-    padding: 0.4rem;
+    padding: 0.3rem;
   }
 
   .banner-nav-btn {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .banner-close-btn {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Extra ultra small screens */
+@media (max-width: 200px) {
+  .banner-content-wrapper {
+    height: 140px;
+    max-height: 35vh;
+    width: 99.8vw;
+  }
+
+  .banner-slide img {
+    object-fit: contain;
+    background: var(--surface);
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .banner-text-content h2 {
+    font-size: 0.7rem;
+  }
+
+  .banner-text-content p {
+    font-size: 0.5rem;
+  }
+
+  .banner-text-content {
+    padding: 0.2rem;
+  }
+
+  .banner-nav-btn {
+    width: 16px;
+    height: 16px;
+  }
+
+  .banner-close-btn {
+    width: 14px;
+    height: 14px;
   }
 }
 
