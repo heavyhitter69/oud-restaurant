@@ -11,6 +11,8 @@
     margin-top: 30px;
     margin-bottom: 30px;
     z-index: 1;
+    border-radius: 0 0 2rem 2rem;
+    overflow: hidden;
 }
 .header-contents{
     position: absolute;
@@ -50,6 +52,7 @@
         width: 100vw;
         left: 50%;
         transform: translateX(-50%);
+        border-radius: 0 0 1.5rem 1.5rem;
     }
 }
 @media (max-width:750px) {
@@ -66,5 +69,6 @@
         width: 100vw;
         left: 50%;
         transform: translateX(-50%);
+        border-radius: 0 0 1rem 1rem;
     }
 }
