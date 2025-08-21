@@ -115,6 +115,7 @@ const StoreContextProvider = (props) => {
     setCartItems({});
     setCartVersion(prev => prev + 1);
     setCartClearedAfterOrder(true);
+    setCartLoaded(true); // Prevent reloading from server
     
     // Clear localStorage
     localStorage.removeItem("cartItems");

@@ -91,6 +91,11 @@ const Verify = () => {
           if (response.data.success) {
             console.log("Payment verification successful!");
             setStatus("success");
+            
+            // Clear cart ONLY after successful payment
+            console.log("Payment successful - clearing cart...");
+            await clearCart();
+            
             // Start countdown
             const countdownInterval = setInterval(() => {
               setCountdown(prev => {
