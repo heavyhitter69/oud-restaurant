@@ -6,6 +6,12 @@
     padding: 12px 15px;
     border: 1px solid #cacaca;
     font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.list-table-format:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .list-table-format.title{
     background-color: #f9f9f9;
@@ -40,19 +46,64 @@
 
 .edit-actions, .action-buttons {
     display: flex;
-    gap: 5px;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-actions p, .action-buttons p {
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.edit-actions p:hover, .action-buttons p:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.1);
+}
+
+.edit-actions p:first-child:hover {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.edit-actions p:last-child:hover {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.list-table-format input[type="text"],
+.list-table-format input[type="number"],
+.list-table-format textarea,
+.list-table-format select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.list-table-format input[type="text"]:focus,
+.list-table-format input[type="number"]:focus,
+.list-table-format textarea:focus,
+.list-table-format select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
 }
 
 .list-table-format textarea {
     resize: vertical;
     min-height: 60px;
-    font-size: 12px;
-    padding: 5px;
+    max-height: 120px;
 }
 
 .list-table-format select {
-    font-size: 12px;
-    padding: 5px;
+    cursor: pointer;
 }
 
 @media (max-width:600px) {
