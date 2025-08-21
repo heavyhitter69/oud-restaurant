@@ -7,35 +7,19 @@ const FoodItem = ({ id, name, price, description, image }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
-  // Listen for cart clearing events - BULLETPROOF
+  // Listen for cart clearing events - ULTRA AGGRESSIVE
   useEffect(() => {
     const handleCartCleared = () => {
       console.log("🔄 FoodItem: Cart cleared event received");
       setLocalCartItems({});
-    };
-
-    const handleForceCartReset = () => {
-      console.log("🔄 FoodItem: Force cart reset event received");
-      setLocalCartItems({});
-    };
-
-    const handleNuclearCartClear = () => {
-      console.log("🔄 FoodItem: Nuclear cart clear event received");
-      setLocalCartItems({});
-    };
-
-    const handleCartReset = () => {
-      console.log("🔄 FoodItem: Cart reset event received");
-      setLocalCartItems({});
-    };
-
-    const handleClearCart = () => {
-      console.log("🔄 FoodItem: Clear cart event received");
-      setLocalCartItems({});
+      // Force immediate re-render
+      setTimeout(() => {
+        setLocalCartItems({});
+      }, 10);
     };
 
     // Listen to all possible cart clearing events
-    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart'];
+    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart', 'cartAnnihilated'];
     events.forEach(eventType => {
       window.addEventListener(eventType, handleCartCleared);
     });

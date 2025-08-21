@@ -48,24 +48,23 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // BULLETPROOF cart clearing
+          // ULTRA AGGRESSIVE cart clearing
           try {
-            console.log("🚨 BULLETPROOF CART CLEARING INITIATED...");
+            console.log("🚨 ULTRA AGGRESSIVE CART CLEARING INITIATED...");
             
-            // Use the bulletproof clearCart function
+            // Use the ultra aggressive clearCart function
             await clearCart();
             
-            // Additional bulletproof events
-            window.dispatchEvent(new CustomEvent('cartReset'));
-            window.dispatchEvent(new CustomEvent('clearCart'));
+            // Additional ultra aggressive events
+            window.dispatchEvent(new CustomEvent('cartAnnihilated'));
             
-            console.log("✅ BULLETPROOF cart clearing completed");
+            console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
           } catch (error) {
-            console.error("❌ Bulletproof cart clearing failed:", error);
-            // Fallback: force page refresh
+            console.error("❌ Ultra aggressive cart clearing failed:", error);
+            // Fallback: force page refresh immediately
             setTimeout(() => {
               window.location.reload();
-            }, 2000);
+            }, 1000);
           }
           
           // Force a small delay to ensure cart clearing is processed
@@ -128,24 +127,23 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // BULLETPROOF cart clearing
+            // ULTRA AGGRESSIVE cart clearing
             try {
-              console.log("🚨 BULLETPROOF CART CLEARING INITIATED...");
+              console.log("🚨 ULTRA AGGRESSIVE CART CLEARING INITIATED...");
               
-              // Use the bulletproof clearCart function
+              // Use the ultra aggressive clearCart function
               await clearCart();
               
-              // Additional bulletproof events
-              window.dispatchEvent(new CustomEvent('cartReset'));
-              window.dispatchEvent(new CustomEvent('clearCart'));
+              // Additional ultra aggressive events
+              window.dispatchEvent(new CustomEvent('cartAnnihilated'));
               
-              console.log("✅ BULLETPROOF cart clearing completed");
+              console.log("✅ ULTRA AGGRESSIVE cart clearing completed");
             } catch (error) {
-              console.error("❌ Bulletproof cart clearing failed:", error);
-              // Fallback: force page refresh
+              console.error("❌ Ultra aggressive cart clearing failed:", error);
+              // Fallback: force page refresh immediately
               setTimeout(() => {
                 window.location.reload();
-              }, 2000);
+              }, 1000);
             }
             
             // Force a small delay to ensure cart clearing is processed
