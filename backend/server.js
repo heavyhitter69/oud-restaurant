@@ -134,10 +134,18 @@ connectDB().catch(console.error);
                 return
               }
               
+              // Check if file exists first
+              const fs = require('fs')
+              if (!fs.existsSync(filePath)) {
+                console.log(`Image file does not exist: ${filename}`)
+                res.status(404).send('Image not found')
+                return
+              }
+              
               res.sendFile(filePath, (err) => {
                 if (err) {
-                  console.log(`Image not found: ${filename}`)
-                  res.status(404).send('Image not found')
+                  console.log(`Error serving image ${filename}:`, err.message)
+                  res.status(500).send('Error serving image')
                 } else {
                   console.log(`Image served successfully: ${filename}`)
                 }
@@ -149,14 +157,22 @@ connectDB().catch(console.error);
               const filename = req.params.filename
               const filePath = path.join(__dirname, 'uploads', filename)
               
+              // Check if file exists first
+              const fs = require('fs')
+              if (!fs.existsSync(filePath)) {
+                console.log(`API Image file does not exist: ${filename}`)
+                res.status(404).send('Image not found')
+                return
+              }
+              
               // Minimal headers for maximum compatibility
               res.set('Access-Control-Allow-Origin', '*')
               res.set('Content-Type', 'image/png')
               
               res.sendFile(filePath, (err) => {
                 if (err) {
-                  console.log(`API Image not found: ${filename}`)
-                  res.status(404).send('Image not found')
+                  console.log(`Error serving API image ${filename}:`, err.message)
+                  res.status(500).send('Error serving image')
                 } else {
                   console.log(`API Image served successfully: ${filename}`)
                 }
@@ -180,6 +196,36 @@ app.get("/health", (req, res) => {
     uptime: process.uptime()
   })
 })
+
+// Test endpoint to check uploads directory
+app.get("/test-uploads", (req, res) => {
+  const fs = require('fs');
+  const uploadsPath = path.join(__dirname, 'uploads');
+  
+  try {
+    if (fs.existsSync(uploadsPath)) {
+      const files = fs.readdirSync(uploadsPath);
+      res.json({
+        success: true,
+        uploadsPath,
+        fileCount: files.length,
+        files: files.slice(0, 10) // Show first 10 files
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Uploads directory does not exist",
+        uploadsPath
+      });
+    }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Error reading uploads directory",
+      error: error.message
+    });
+  }
+});
 
 // Test verify endpoint
 app.get("/test-verify", (req, res) => {
