@@ -17,6 +17,18 @@ import bannerRouter from "./routes/bannerRoute.js"
 const app = express()
 const port = process.env.PORT || 4000
 
+// Check for required environment variables
+const requiredEnvVars = ['JWT_SECRET', 'PAYSTACK_SECRET_KEY', 'MONGODB_URI'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:', missingEnvVars);
+  console.error('Please set these environment variables before starting the server.');
+  process.exit(1);
+}
+
+console.log('✅ All required environment variables are set');
+
             // Security middleware - Completely disable for image loading
             app.use(helmet({
               contentSecurityPolicy: false,
@@ -40,9 +52,25 @@ const limiter = rateLimit({
 
 app.use(limiter)
 
-// CORS configuration - Allow all origins for now
+// CORS configuration - Production ready
+const allowedOrigins = [
+  'https://oud-restaurant-4nt0.onrender.com',
+  'https://oud-restaurant-admin-yl6p.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: true, // Allow all origins
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token', 'X-Requested-With', 'Origin', 'Accept'],
@@ -51,7 +79,10 @@ app.use(cors({
 
 // Additional CORS headers for all responses
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token');

@@ -6,15 +6,15 @@ import crypto from "crypto"
 import nodemailer from "nodemailer"
 
 // Paystack configuration
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY || 'sk_test_9302756be16ac6779d561177e651261f41d7ea2d';
+const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 
-// WhatsApp Business API configuration (you'll need to set up your own WhatsApp Business API)
+// WhatsApp Business API configuration
 const WHATSAPP_PHONE_NUMBER = process.env.WHATSAPP_PHONE_NUMBER || '+233205486812';
 
 // Email configuration
-const EMAIL_USER = process.env.EMAIL_USER || 'oudtomato@gmail.com';
-const EMAIL_PASS = process.env.EMAIL_PASS || 'your-email-password';
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASS = process.env.EMAIL_PASS;
 
 
 //placing user order for front end

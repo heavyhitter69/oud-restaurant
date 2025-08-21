@@ -17,8 +17,16 @@ const Verify = () => {
 
   const [status, setStatus] = useState("verifying"); // 'verifying', 'success', 'failed'
   const [countdown, setCountdown] = useState(2);
+  const [isVerifying, setIsVerifying] = useState(false); // Prevent multiple verification attempts
 
   const verifyPayment = async () => {
+    if (isVerifying) {
+      console.log("Verification already in progress, skipping...");
+      return;
+    }
+    
+    setIsVerifying(true);
+    
     try {
       console.log("URL params:", { reference, trxref, status_param });
       console.log("Current URL:", window.location.href);
@@ -81,11 +89,13 @@ const Verify = () => {
         } else {
           console.log("Verification failed:", response.data.message);
           setStatus("failed");
+          setIsVerifying(false);
         }
       } else if (status_param === "cancelled" || status_param === "failed") {
         // Paystack indicates failure
         console.log("Payment cancelled or failed by Paystack");
         setStatus("failed");
+        setIsVerifying(false);
       } else {
         // No status parameter, but reference exists - this is likely a successful payment
         const ref = reference || trxref;
@@ -110,6 +120,7 @@ const Verify = () => {
             }, 1000);
           } else {
             console.log("Payment verification failed:", response.data.message);
+            setIsVerifying(false);
             // If verification fails but we have a reference, it might be a timing issue
             // or the payment is still processing. Let's give it a moment and try again
             console.log("First verification failed, trying again in 3 seconds...");
