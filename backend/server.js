@@ -118,6 +118,23 @@ connectDB().catch(console.error);
             // Special route for problematic images with explicit CORS
             app.get("/images/:filename", (req, res) => {
               const filename = req.params.filename
+              
+              // Special handling for the problematic Veg Salad image
+              if (filename === '1755737167177food_2.png') {
+                console.log('Serving placeholder for problematic Veg Salad image')
+                res.set('Access-Control-Allow-Origin', '*')
+                res.set('Content-Type', 'image/svg+xml')
+                
+                // Return a simple SVG placeholder
+                const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                  <rect width="200" height="200" fill="#f0f0f0"/>
+                  <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#999" font-family="Arial" font-size="16">Veg Salad</text>
+                </svg>`
+                
+                res.send(placeholderSvg)
+                return
+              }
+              
               const filePath = path.join(__dirname, 'uploads', filename)
               
               // Set CORS headers explicitly - more aggressive approach
@@ -155,6 +172,23 @@ connectDB().catch(console.error);
             // Alternative route for the specific problematic image
             app.get("/api/image/:filename", (req, res) => {
               const filename = req.params.filename
+              
+              // Special handling for the problematic Veg Salad image
+              if (filename === '1755737167177food_2.png') {
+                console.log('Serving placeholder for problematic Veg Salad image')
+                res.set('Access-Control-Allow-Origin', '*')
+                res.set('Content-Type', 'image/svg+xml')
+                
+                // Return a simple SVG placeholder
+                const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                  <rect width="200" height="200" fill="#f0f0f0"/>
+                  <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#999" font-family="Arial" font-size="16">Veg Salad</text>
+                </svg>`
+                
+                res.send(placeholderSvg)
+                return
+              }
+              
               const filePath = path.join(__dirname, 'uploads', filename)
               
               // Check if file exists first
