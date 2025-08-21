@@ -48,19 +48,20 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // NUCLEAR cart clearing
+          // BULLETPROOF cart clearing
           try {
-            console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
+            console.log("🚨 BULLETPROOF CART CLEARING INITIATED...");
             
-            // Use the nuclear clearCart function
+            // Use the bulletproof clearCart function
             await clearCart();
             
-            // Additional nuclear events
-            window.dispatchEvent(new CustomEvent('nuclearCartClear'));
+            // Additional bulletproof events
+            window.dispatchEvent(new CustomEvent('cartReset'));
+            window.dispatchEvent(new CustomEvent('clearCart'));
             
-            console.log("✅ NUCLEAR cart clearing completed");
+            console.log("✅ BULLETPROOF cart clearing completed");
           } catch (error) {
-            console.error("❌ Nuclear cart clearing failed:", error);
+            console.error("❌ Bulletproof cart clearing failed:", error);
             // Fallback: force page refresh
             setTimeout(() => {
               window.location.reload();
@@ -127,19 +128,20 @@ const Verify = () => {
                           if (retryResponse.data.success) {
             setStatus("success");
             
-            // NUCLEAR cart clearing
+            // BULLETPROOF cart clearing
             try {
-              console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
+              console.log("🚨 BULLETPROOF CART CLEARING INITIATED...");
               
-              // Use the nuclear clearCart function
+              // Use the bulletproof clearCart function
               await clearCart();
               
-              // Additional nuclear events
-              window.dispatchEvent(new CustomEvent('nuclearCartClear'));
+              // Additional bulletproof events
+              window.dispatchEvent(new CustomEvent('cartReset'));
+              window.dispatchEvent(new CustomEvent('clearCart'));
               
-              console.log("✅ NUCLEAR cart clearing completed");
+              console.log("✅ BULLETPROOF cart clearing completed");
             } catch (error) {
-              console.error("❌ Nuclear cart clearing failed:", error);
+              console.error("❌ Bulletproof cart clearing failed:", error);
               // Fallback: force page refresh
               setTimeout(() => {
                 window.location.reload();

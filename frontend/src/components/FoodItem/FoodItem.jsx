@@ -7,7 +7,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
-  // Listen for cart clearing events - NUCLEAR PROOF
+  // Listen for cart clearing events - BULLETPROOF
   useEffect(() => {
     const handleCartCleared = () => {
       console.log("🔄 FoodItem: Cart cleared event received");
@@ -20,22 +20,30 @@ const FoodItem = ({ id, name, price, description, image }) => {
     };
 
     const handleNuclearCartClear = () => {
-      console.log("🔄 FoodItem: NUCLEAR cart clear event received");
+      console.log("🔄 FoodItem: Nuclear cart clear event received");
       setLocalCartItems({});
-      // Force immediate re-render
-      setTimeout(() => {
-        setLocalCartItems({});
-      }, 10);
     };
 
-    window.addEventListener('cartCleared', handleCartCleared);
-    window.addEventListener('forceCartReset', handleForceCartReset);
-    window.addEventListener('nuclearCartClear', handleNuclearCartClear);
-    
+    const handleCartReset = () => {
+      console.log("🔄 FoodItem: Cart reset event received");
+      setLocalCartItems({});
+    };
+
+    const handleClearCart = () => {
+      console.log("🔄 FoodItem: Clear cart event received");
+      setLocalCartItems({});
+    };
+
+    // Listen to all possible cart clearing events
+    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart'];
+    events.forEach(eventType => {
+      window.addEventListener(eventType, handleCartCleared);
+    });
+
     return () => {
-      window.removeEventListener('cartCleared', handleCartCleared);
-      window.removeEventListener('forceCartReset', handleForceCartReset);
-      window.removeEventListener('nuclearCartClear', handleNuclearCartClear);
+      events.forEach(eventType => {
+        window.removeEventListener(eventType, handleCartCleared);
+      });
     };
   }, []);
 

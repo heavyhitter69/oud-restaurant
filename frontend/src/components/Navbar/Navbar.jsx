@@ -10,11 +10,23 @@ const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
   const [search, setSearch] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const { getTotalCartAmount, token, userAvatar, logout, forceLogout, food_list = [] } = useContext(StoreContext);
 
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (search.trim() === "") {
@@ -36,11 +48,15 @@ const Navbar = ({ setShowLogin }) => {
     }
   };
 
+  // Always show search on mobile, conditional on desktop
+  const shouldShowSearch = isHomePage || isMobile;
+
   return (
     <div className='navbar'>
       <Link to='/' onClick={() => setMenu("home")}>
         <img src={assets.logo_2} alt="" className="logo" />
       </Link>
+      
       <ul className="navbar-menu">
         <Link to='/' onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</Link>
         <a href='#explore-menu' onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</a>
@@ -49,26 +65,28 @@ const Navbar = ({ setShowLogin }) => {
       </ul>
 
       <div className="navbar-right">
-        {/* Search container - ALWAYS visible on mobile, conditional on desktop */}
-        <div className={`navbar-search-container ${!isHomePage ? 'mobile-only' : ''}`}>
-          <input
-            type="text"
-            placeholder="Search food..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="navbar-search-input"
-          />
-          <img src={assets.search_icon} alt="" className="navbar-search-icon-actual" />
-          {search && filteredResults.length > 0 && (
-            <div className="search-suggestions">
-              {filteredResults.map(item => (
-                <p key={item._id} onClick={() => handleSuggestionClick(item._id)}>
-                  {item.name}
-                </p>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* SEARCH CONTAINER - ALWAYS VISIBLE ON MOBILE */}
+        {shouldShowSearch && (
+          <div className="navbar-search-container">
+            <input
+              type="text"
+              placeholder="Search food..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="navbar-search-input"
+            />
+            <img src={assets.search_icon} alt="" className="navbar-search-icon-actual" />
+            {search && filteredResults.length > 0 && (
+              <div className="search-suggestions">
+                {filteredResults.map(item => (
+                  <p key={item._id} onClick={() => handleSuggestionClick(item._id)}>
+                    {item.name}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="navbar-search-icon">
           <Link to='/cart'>

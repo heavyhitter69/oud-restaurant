@@ -107,63 +107,97 @@ const StoreContextProvider = (props) => {
     });
   }, [token, url, setCartItemsAndPersist]);
 
-  // Clear cart completely - NUCLEAR OPTION
+  // Clear cart completely - BULLETPROOF SOLUTION
   const clearCart = useCallback(async () => {
-    console.log("🚨 NUCLEAR CART CLEARING INITIATED...");
+    console.log("🚨 BULLETPROOF CART CLEARING INITIATED...");
     
-    // NUCLEAR STEP 1: Immediate state annihilation
+    // STEP 1: Immediate state clearing
     setCartItems({});
-    setCartVersion(prev => prev + 10); // Force massive re-render
+    setCartVersion(prev => prev + 100); // Force massive re-render
     setCartClearedAfterOrder(true);
     
-    // NUCLEAR STEP 2: Complete storage annihilation
-    localStorage.clear(); // Clear ALL localStorage
-    sessionStorage.clear(); // Clear ALL sessionStorage
-    
-    // NUCLEAR STEP 3: Event bombardment
-    for (let i = 0; i < 5; i++) {
-      window.dispatchEvent(new CustomEvent('cartCleared'));
-      window.dispatchEvent(new CustomEvent('forceCartReset'));
-      window.dispatchEvent(new CustomEvent('nuclearCartClear'));
+    // STEP 2: Clear all possible storage locations
+    try {
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("cartData");
+      localStorage.removeItem("cart");
+      sessionStorage.removeItem("cartItems");
+      sessionStorage.removeItem("cartData");
+      sessionStorage.removeItem("cart");
+      
+      // Clear any other possible cart keys
+      Object.keys(localStorage).forEach(key => {
+        if (key.toLowerCase().includes('cart')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.toLowerCase().includes('cart')) {
+          sessionStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      console.error("Storage clearing error:", error);
     }
     
-    // NUCLEAR STEP 4: Force page refresh if needed
-    setTimeout(() => {
-      const cartStillExists = localStorage.getItem("cartItems") || sessionStorage.getItem("cartItems");
-      if (cartStillExists) {
-        console.log("🚨 NUCLEAR OPTION: Cart persists, forcing page refresh...");
-        window.location.reload();
-        return;
+    // STEP 3: Dispatch multiple clearing events
+    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart'];
+    events.forEach(eventType => {
+      for (let i = 0; i < 3; i++) {
+        window.dispatchEvent(new CustomEvent(eventType));
       }
-    }, 1000);
+    });
     
-    // NUCLEAR STEP 5: Server annihilation
+    // STEP 4: Clear server cart
     if (token) {
       try {
         await axios.post(url + "/api/cart/clear", {}, { headers: { token } });
-        console.log("✅ Server cart annihilated");
+        console.log("✅ Server cart cleared");
       } catch (error) {
-        console.error("❌ Server cart annihilation failed:", error);
+        console.error("❌ Server cart clearing failed:", error);
       }
     }
     
-    // NUCLEAR STEP 6: Final verification and cleanup
+    // STEP 5: Force component updates
     setTimeout(() => {
-      // Restore essential data
-      if (token) {
-        localStorage.setItem("token", token);
-      }
-      if (userAvatar) {
-        localStorage.setItem("userAvatar", userAvatar);
-      }
-      if (userData) {
-        localStorage.setItem("userData", JSON.stringify(userData));
+      setCartItems({});
+      setCartVersion(prev => prev + 1);
+      window.dispatchEvent(new CustomEvent('cartCleared'));
+    }, 50);
+    
+    // STEP 6: Final verification and page refresh if needed
+    setTimeout(() => {
+      const remainingCart = localStorage.getItem("cartItems") || 
+                           localStorage.getItem("cartData") || 
+                           sessionStorage.getItem("cartItems");
+      
+      if (remainingCart && remainingCart !== "{}" && remainingCart !== "null") {
+        console.log("🚨 Cart still exists, forcing page refresh...");
+        // Save essential data before refresh
+        const essentialData = {
+          token: localStorage.getItem("token"),
+          userAvatar: localStorage.getItem("userAvatar"),
+          userData: localStorage.getItem("userData")
+        };
+        
+        // Clear everything and refresh
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Restore essential data
+        if (essentialData.token) localStorage.setItem("token", essentialData.token);
+        if (essentialData.userAvatar) localStorage.setItem("userAvatar", essentialData.userAvatar);
+        if (essentialData.userData) localStorage.setItem("userData", essentialData.userData);
+        
+        window.location.reload();
+        return;
       }
       
-      console.log("✅ NUCLEAR CART CLEARING COMPLETED - Cart annihilated");
-    }, 500);
+      console.log("✅ BULLETPROOF CART CLEARING COMPLETED");
+    }, 1000);
     
-  }, [token, url, userAvatar, userData]);
+  }, [token, url]);
 
   // Force cart reset - more aggressive clearing
   const forceCartReset = useCallback(() => {
