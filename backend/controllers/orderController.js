@@ -144,6 +144,11 @@ const verifyOrder = async (req,res) => {
             
             // Update order payment status
             const updatedOrder = await orderModel.findByIdAndUpdate(orderId, {payment: true}, {new: true});
+
+            // Clear user's cart
+            if (updatedOrder) {
+                await userModel.findByIdAndUpdate(updatedOrder.userId, { cartData: {} });
+            }
             
             // Send email invoice to customer
             if (updatedOrder) {

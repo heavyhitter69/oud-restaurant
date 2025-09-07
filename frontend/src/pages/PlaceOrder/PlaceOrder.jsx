@@ -115,10 +115,6 @@ const PlaceOrder = () => {
       if (response.data.success) {
         const {authorization_url} = response.data;
         
-        // Clear cart when proceeding to payment (server-only)
-        console.log("Clearing cart before proceeding to payment...");
-        await clearCart();
-        
         // Keep loading state until redirect happens
         setTimeout(() => {
           window.location.replace(authorization_url);
