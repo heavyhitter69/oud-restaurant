@@ -22,6 +22,7 @@ const FoodDisplay = ({ category }) => {
                 description={item.description}
                 price={item.price}
                 image={item.image}
+                inStock={item.inStock}
               />
             );
           }

@@ -3,7 +3,7 @@ import './FoodItem.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
-const FoodItem = ({ id, name, price, description, image }) => {
+const FoodItem = ({ id, name, price, description, image, inStock }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
@@ -40,8 +40,9 @@ const FoodItem = ({ id, name, price, description, image }) => {
   if (!id || !name || !image) return null; // Prevent rendering broken items
 
   return (
-    <div className='food-item' id={id} key={`${id}-${cartVersion}`}>
+    <div className={`food-item ${!inStock ? 'out-of-stock' : ''}`} id={id} key={`${id}-${cartVersion}`}>
       <div className="food-item-img-container">
+        {!inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         <img
           className="food-item-image"
           src={`${url}/images/${image}`}
@@ -62,7 +63,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
             console.log(`Image loaded successfully: ${e.target.src} for item: ${name}`);
           }}
         />
-        {!localCartItems?.[id] ? (
+        {!inStock ? null : !localCartItems?.[id] ? (
           <img
             className='add'
             onClick={() => addToCart(id)}

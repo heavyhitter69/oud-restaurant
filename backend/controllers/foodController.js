@@ -82,4 +82,20 @@ const updateFood = async (req, res) => {
   }
 };
 
-export { addFood, listFood, removeFood, updateFood };
+// Toggle stock status
+const toggleStock = async (req, res) => {
+    try {
+        const food = await foodModel.findById(req.params.id);
+        if (!food) {
+            return res.status(404).json({ success: false, message: "Food not found" });
+        }
+        food.inStock = !food.inStock;
+        await food.save();
+        res.json({ success: true, message: "Stock status updated", data: food });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Error updating stock status" });
+    }
+};
+
+export { addFood, listFood, removeFood, updateFood, toggleStock };

@@ -1,5 +1,5 @@
 import express from "express";
-import { addFood, listFood, removeFood, updateFood } from "../controllers/foodController.js";
+import { addFood, listFood, removeFood, updateFood, toggleStock } from "../controllers/foodController.js";
 import multer from "multer";
 import { validateFoodItem } from "../middleware/validation.js";
 
@@ -19,5 +19,6 @@ foodRouter.post("/add", upload.single("image"), validateFoodItem, addFood);
 foodRouter.get("/list", listFood);
 foodRouter.post("/remove", removeFood);
 foodRouter.put("/update/:id", upload.single("image"), updateFood); // 🔥 Now supports image upload
+foodRouter.post("/toggle-stock/:id", toggleStock);
 
 export default foodRouter;
