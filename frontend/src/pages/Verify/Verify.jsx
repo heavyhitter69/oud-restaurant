@@ -48,7 +48,9 @@ const Verify = () => {
         if (response.data.success) {
           setStatus("success");
           
-          // Cart is already cleared before payment, just redirect
+          // Clear cart now that payment is verified
+          await clearCart();
+
           setTimeout(() => {
             // Start countdown
             const countdownInterval = setInterval(() => {
