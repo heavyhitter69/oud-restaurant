@@ -106,7 +106,7 @@
     cursor: pointer;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .list-table-format.title {
         display: none;
     }
