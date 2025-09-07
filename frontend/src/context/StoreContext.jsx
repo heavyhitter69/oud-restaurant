@@ -51,6 +51,7 @@ const StoreContextProvider = (props) => {
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [cartLoaded, setCartLoaded] = useState(false);
   const [cartClearedAfterOrder, setCartClearedAfterOrder] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   // Custom setCartItems function that also updates localStorage
   const setCartItemsAndPersist = useCallback((newCartItems) => {
@@ -58,51 +59,52 @@ const StoreContextProvider = (props) => {
     localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   }, []);
 
-  // Add to cart - SERVER ONLY
+  // Add to cart - supports local and server cart
   const addToCart = useCallback(async (itemId) => {
-    console.log("Adding to cart:", itemId);
-    
-    if (!token) {
-      console.error("No token available for cart operation");
-      return;
-    }
-    
-    try {
-      const response = await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
-      console.log("Add to cart response:", response.data);
-      
-      if (response.data.success) {
-        // Update local state with server response
-        setCartItems(response.data.cartData || {});
-        console.log("Cart updated from server:", response.data.cartData);
+    if (token) {
+      // Logged in: update server cart
+      try {
+        const response = await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
+        if (response.data.success) {
+          setCartItems(response.data.cartData);
+        }
+      } catch (error) {
+        console.error("Failed to add to cart on server:", error);
       }
-    } catch (error) {
-      console.error("Failed to add to cart:", error);
+    } else {
+      // Not logged in: update local cart
+      setCartItemsAndPersist((prev) => ({
+        ...prev,
+        [itemId]: (prev[itemId] || 0) + 1,
+      }));
     }
-  }, [token, url]);
+  }, [token, url, setCartItemsAndPersist]);
 
-  // Remove from cart - SERVER ONLY
+  // Remove from cart - supports local and server cart
   const removeFromCart = useCallback(async (itemId) => {
-    console.log("Removing from cart:", itemId);
-    
-    if (!token) {
-      console.error("No token available for cart operation");
-      return;
-    }
-    
-    try {
-      const response = await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
-      console.log("Remove from cart response:", response.data);
-      
-      if (response.data.success) {
-        // Update local state with server response
-        setCartItems(response.data.cartData || {});
-        console.log("Cart updated from server:", response.data.cartData);
+    if (token) {
+      // Logged in: update server cart
+      try {
+        const response = await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
+        if (response.data.success) {
+          setCartItems(response.data.cartData);
+        }
+      } catch (error) {
+        console.error("Failed to remove from cart on server:", error);
       }
-    } catch (error) {
-      console.error("Failed to remove from cart:", error);
+    } else {
+      // Not logged in: update local cart
+      setCartItemsAndPersist((prev) => {
+        const newCart = { ...prev };
+        if (newCart[itemId] > 1) {
+          newCart[itemId] -= 1;
+        } else {
+          delete newCart[itemId];
+        }
+        return newCart;
+      });
     }
-  }, [token, url]);
+  }, [token, url, setCartItemsAndPersist]);
 
   // Clear cart completely - SERVER ONLY
   const clearCart = useCallback(async () => {
@@ -221,28 +223,45 @@ const StoreContextProvider = (props) => {
     }
   }, [url]);
 
-  // Load cart data - SERVER ONLY
+  // Load cart data and sync with local cart
   const loadCartData = useCallback(async (token) => {
     if (cartLoaded) {
       console.log("Cart already loaded, skipping...");
       return;
     }
-    
+
     try {
-      console.log("Loading cart data from server only");
-      const response = await axios.post(url + "/api/cart/get", {}, { headers: { token } });
-      console.log("Server cart response:", response.data);
+      // 1. Get server cart
+      const serverResponse = await axios.post(url + "/api/cart/get", {}, { headers: { token } });
+      const serverCart = serverResponse.data.cartData || {};
+
+      // 2. Get local cart from localStorage
+      const localCartString = localStorage.getItem("cartItems");
+      const localCart = localCartString ? JSON.parse(localCartString) : {};
+
+      // 3. Merge carts
+      const mergedCart = { ...serverCart };
+      for (const itemId in localCart) {
+        if (localCart.hasOwnProperty(itemId)) {
+          mergedCart[itemId] = (mergedCart[itemId] || 0) + localCart[itemId];
+        }
+      }
+
+      // 4. Update state with merged cart
+      setCartItems(mergedCart);
+
+      // 5. Sync merged cart back to server
+      if (Object.keys(localCart).length > 0) {
+        await axios.post(url + "/api/cart/sync", { cartData: mergedCart }, { headers: { token } });
+        // 6. Clear local cart from localStorage after successful sync
+        localStorage.removeItem("cartItems");
+      }
       
-      const serverCartData = response.data.cartData || {};
-      console.log("Server cart data:", serverCartData);
-      
-      // Set cart items from server only
-      setCartItems(serverCartData);
       setCartLoaded(true);
-      
-      console.log("Cart loading completed from server");
+      console.log("Cart loaded and synced with server.");
+
     } catch (error) {
-      console.error("Failed to load cart from server:", error);
+      console.error("Failed to load and sync cart:", error);
       setCartItems({}); // Set empty cart on error
       setCartLoaded(true);
     }
@@ -350,7 +369,9 @@ const StoreContextProvider = (props) => {
     userData,
     setToken: setTokenAndPersist,
     logout,
-    loadCartData
+    loadCartData,
+    showLogin,
+    setShowLogin
   };
 
   return (
