@@ -53,11 +53,12 @@ const StoreContextProvider = (props) => {
   const [cartClearedAfterOrder, setCartClearedAfterOrder] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  // Custom setCartItems function that also updates localStorage
-  const setCartItemsAndPersist = useCallback((newCartItems) => {
-    setCartItems(newCartItems);
-    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
-  }, []);
+  // Persist cart to localStorage for anonymous users
+  useEffect(() => {
+    if (!token) {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+  }, [cartItems, token]);
 
   // Add to cart - supports local and server cart
   const addToCart = useCallback(async (itemId) => {
@@ -73,12 +74,12 @@ const StoreContextProvider = (props) => {
       }
     } else {
       // Not logged in: update local cart
-      setCartItemsAndPersist((prev) => ({
+      setCartItems((prev) => ({
         ...prev,
         [itemId]: (prev[itemId] || 0) + 1,
       }));
     }
-  }, [token, url, setCartItemsAndPersist]);
+  }, [token, url]);
 
   // Remove from cart - supports local and server cart
   const removeFromCart = useCallback(async (itemId) => {
@@ -94,7 +95,7 @@ const StoreContextProvider = (props) => {
       }
     } else {
       // Not logged in: update local cart
-      setCartItemsAndPersist((prev) => {
+      setCartItems((prev) => {
         const newCart = { ...prev };
         if (newCart[itemId] > 1) {
           newCart[itemId] -= 1;
@@ -104,7 +105,7 @@ const StoreContextProvider = (props) => {
         return newCart;
       });
     }
-  }, [token, url, setCartItemsAndPersist]);
+  }, [token, url]);
 
   // Clear cart completely - SERVER ONLY
   const clearCart = useCallback(async () => {
@@ -237,7 +238,9 @@ const StoreContextProvider = (props) => {
 
       // 2. Get local cart from localStorage
       const localCartString = localStorage.getItem("cartItems");
-      const localCart = localCartString ? JSON.parse(localCartString) : {};
+      const localCart = localCartString && localCartString !== "undefined" && localCartString !== "null"
+        ? JSON.parse(localCartString)
+        : {};
 
       // 3. Merge carts
       const mergedCart = { ...serverCart };
@@ -298,7 +301,7 @@ const StoreContextProvider = (props) => {
   const logout = useCallback(() => {
     console.log("Logging out user...");
     setTokenAndPersist("");
-    setCartItemsAndPersist({});
+    setCartItems({});
     setCartClearedAfterOrder(false);
     setCartLoaded(false);
     setAppliedPromo(null);
@@ -306,7 +309,7 @@ const StoreContextProvider = (props) => {
     localStorage.clear();
     // Force page refresh to ensure clean state
     window.location.reload();
-  }, [setTokenAndPersist, setCartItemsAndPersist]);
+  }, [setTokenAndPersist]);
 
 
 
@@ -340,11 +343,11 @@ const StoreContextProvider = (props) => {
   // Reset cart when token changes
   useEffect(() => {
     if (!token) {
-      setCartItemsAndPersist({});
+      setCartItems({});
       setCartLoaded(false);
       setCartClearedAfterOrder(false);
     }
-  }, [token, setCartItemsAndPersist]);
+  }, [token]);
 
   // REMOVED: localStorage persistence - using server-only cart management
 
@@ -352,7 +355,7 @@ const StoreContextProvider = (props) => {
     food_list,
     cartItems,
     cartVersion,
-    setCartItems: setCartItemsAndPersist,
+    setCartItems,
     addToCart,
     removeFromCart,
     clearCart,
