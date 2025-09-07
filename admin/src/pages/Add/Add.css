@@ -33,3 +33,18 @@
   color: white;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    .add {
+        width: 90%;
+    }
+    .add-product-name, .add-product-description {
+        width: 100%;
+    }
+    .add-category-price {
+        flex-direction: column;
+    }
+    .add-category-price select, .add-category-price input {
+        max-width: none;
+    }
+}

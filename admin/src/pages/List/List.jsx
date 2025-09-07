@@ -72,11 +72,11 @@ const List = ({ url }) => {
 
         {list.map((item, index) => (
           <div key={index} className="list-table-format">
-            <img src={`${url}/images/${item.image}`} alt={item.name} />
+            <img data-label="Image" src={`${url}/images/${item.image}`} alt={item.name} />
 
             {editingId === item._id ? (
               <>
-                <div className="edit-image-container">
+                <div data-label="Image" className="edit-image-container">
                   <img 
                     src={editImage ? URL.createObjectURL(editImage) : `${url}/images/${item.image}`} 
                     alt={item.name} 
@@ -87,35 +87,43 @@ const List = ({ url }) => {
                     accept="image/*"
                   />
                 </div>
-                <input
-                  type="text"
-                  value={editValues.name}
-                  onChange={(e) => setEditValues({ ...editValues, name: e.target.value })}
-                />
-                <textarea
-                  value={editValues.description}
-                  onChange={(e) => setEditValues({ ...editValues, description: e.target.value })}
-                  rows="3"
-                />
-                <select
-                  value={editValues.category}
-                  onChange={(e) => setEditValues({ ...editValues, category: e.target.value })}
-                >
-                  <option value="Salad">Salad</option>
-                  <option value="Rolls">Rolls</option>
-                  <option value="Deserts">Deserts</option>
-                  <option value="Sandwich">Sandwich</option>
-                  <option value="Cake">Cake</option>
-                  <option value="Pure Veg">Pure Veg</option>
-                  <option value="Pasta">Pasta</option>
-                  <option value="Noodles">Noodles</option>
-                </select>
-                <input
-                  type="number"
-                  value={editValues.price}
-                  onChange={(e) => setEditValues({ ...editValues, price: e.target.value })}
-                />
-                <div className="edit-actions">
+                <div data-label="Name">
+                  <input
+                    type="text"
+                    value={editValues.name}
+                    onChange={(e) => setEditValues({ ...editValues, name: e.target.value })}
+                  />
+                </div>
+                <div data-label="Description">
+                  <textarea
+                    value={editValues.description}
+                    onChange={(e) => setEditValues({ ...editValues, description: e.target.value })}
+                    rows="3"
+                  />
+                </div>
+                <div data-label="Category">
+                  <select
+                    value={editValues.category}
+                    onChange={(e) => setEditValues({ ...editValues, category: e.target.value })}
+                  >
+                    <option value="Salad">Salad</option>
+                    <option value="Rolls">Rolls</option>
+                    <option value="Deserts">Deserts</option>
+                    <option value="Sandwich">Sandwich</option>
+                    <option value="Cake">Cake</option>
+                    <option value="Pure Veg">Pure Veg</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Noodles">Noodles</option>
+                  </select>
+                </div>
+                <div data-label="Price">
+                  <input
+                    type="number"
+                    value={editValues.price}
+                    onChange={(e) => setEditValues({ ...editValues, price: e.target.value })}
+                  />
+                </div>
+                <div data-label="Actions" className="edit-actions">
                   <p onClick={() => saveEdit(item._id)} className="cursor">💾</p>
                   <p onClick={() => {
                     setEditingId(null);
@@ -125,11 +133,11 @@ const List = ({ url }) => {
               </>
             ) : (
               <>
-                <p>{item.name}</p>
-                <p className="description-cell">{item.description}</p>
-                <p>{item.category}</p>
-                <p>${item.price}</p>
-                <div className="action-buttons">
+                <p data-label="Name">{item.name}</p>
+                <p data-label="Description" className="description-cell">{item.description}</p>
+                <p data-label="Category">{item.category}</p>
+                <p data-label="Price">${item.price}</p>
+                <div data-label="Actions" className="action-buttons">
                   <p onClick={() => removeFood(item._id)} className="cursor">🗑️</p>
                   <p
                     onClick={() => {

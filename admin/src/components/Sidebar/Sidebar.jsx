@@ -1,6 +1,6 @@
 import React from 'react'
 import './Sidebar.css'
-import { assets } from '../../assets/assets'
+import { FaPlus, FaList, FaBox, FaBullhorn } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
 
 const Sidebar = () => {
@@ -12,19 +12,19 @@ const Sidebar = () => {
       </div>
       <div className="sidebar-options">
         <NavLink to='/add' className="sidebar-option">
-            <img src={assets.add_icon} alt="" />
+            <FaPlus />
             <p>Add Items</p>
         </NavLink>
          <NavLink to='/list' className="sidebar-option">
-            <img src={assets.order_icon} alt="" />
+            <FaList />
             <p>List Items</p>
         </NavLink>
          <NavLink to='/orders' className="sidebar-option">
-            <img src={assets.order_icon} alt="" />
+            <FaBox />
             <p>Orders</p>
         </NavLink>
          <NavLink to='/marketing' className="sidebar-option">
-            <img src={assets.order_icon} alt="" />
+            <FaBullhorn />
             <p>Marketing</p>
         </NavLink>
       </div>
