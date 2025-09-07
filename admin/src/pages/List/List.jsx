@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './List.css';
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FaToggleOn, FaToggleOff } from 'react-icons/fa';
 
 const List = ({ url }) => {
   const [list, setList] = useState([]);
@@ -53,6 +54,16 @@ const List = ({ url }) => {
     }
   };
 
+  const toggleStock = async (foodId) => {
+    const response = await axios.post(`${url}/api/food/toggle-stock/${foodId}`);
+    if (response.data.success) {
+      toast.success(response.data.message);
+      fetchList();
+    } else {
+      toast.error("Error updating stock status");
+    }
+  };
+
   useEffect(() => {
     fetchList();
   }, []);
@@ -64,14 +75,14 @@ const List = ({ url }) => {
         <div className="list-table-format title">
           <b>Image</b>
           <b>Name</b>
-          <b>Description</b>
           <b>Category</b>
           <b>Price</b>
+          <b>Status</b>
           <b>Actions</b>
         </div>
 
         {list.map((item, index) => (
-          <div key={index} className="list-table-format">
+          <div key={index} className={`list-table-format ${!item.inStock ? 'out-of-stock' : ''}`}>
             <img data-label="Image" src={`${url}/images/${item.image}`} alt={item.name} />
 
             {editingId === item._id ? (
@@ -92,13 +103,6 @@ const List = ({ url }) => {
                     type="text"
                     value={editValues.name}
                     onChange={(e) => setEditValues({ ...editValues, name: e.target.value })}
-                  />
-                </div>
-                <div data-label="Description">
-                  <textarea
-                    value={editValues.description}
-                    onChange={(e) => setEditValues({ ...editValues, description: e.target.value })}
-                    rows="3"
                   />
                 </div>
                 <div data-label="Category">
@@ -123,6 +127,11 @@ const List = ({ url }) => {
                     onChange={(e) => setEditValues({ ...editValues, price: e.target.value })}
                   />
                 </div>
+                <div data-label="Status">
+                    <p className={`status ${item.inStock ? 'in-stock' : 'out-of-stock'}`}>
+                        {item.inStock ? "In Stock" : "Out of Stock"}
+                    </p>
+                </div>
                 <div data-label="Actions" className="edit-actions">
                   <p onClick={() => saveEdit(item._id)} className="cursor">💾</p>
                   <p onClick={() => {
@@ -134,10 +143,15 @@ const List = ({ url }) => {
             ) : (
               <>
                 <p data-label="Name">{item.name}</p>
-                <p data-label="Description" className="description-cell">{item.description}</p>
                 <p data-label="Category">{item.category}</p>
                 <p data-label="Price">${item.price}</p>
+                <div data-label="Status" className={`status ${item.inStock ? 'in-stock' : 'out-of-stock'}`}>
+                    {item.inStock ? "In Stock" : "Out of Stock"}
+                </div>
                 <div data-label="Actions" className="action-buttons">
+                  <p onClick={() => toggleStock(item._id)} className="cursor">
+                    {item.inStock ? <FaToggleOn className="toggle-on" /> : <FaToggleOff className="toggle-off" />}
+                  </p>
                   <p onClick={() => removeFood(item._id)} className="cursor">🗑️</p>
                   <p
                     onClick={() => {
