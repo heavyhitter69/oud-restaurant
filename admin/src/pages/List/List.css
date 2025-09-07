@@ -1,8 +1,17 @@
+.list.add.flex-col {
+    width: auto; /* Override the 70% width from .add */
+    margin: 20px;
+}
+
+.list-table {
+    min-width: 750px;
+}
+
 .list-table-format{
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 3fr 1.5fr 1fr 1fr 1.5fr;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     padding: 12px 15px;
     border: 1px solid #cacaca;
     font-size: 13px;
