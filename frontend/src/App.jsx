@@ -15,8 +15,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-  const [showLogin, setShowLogin] = useState(false);
-  const { token } = useContext(StoreContext);
+  const { token, showLogin, setShowLogin } = useContext(StoreContext);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 

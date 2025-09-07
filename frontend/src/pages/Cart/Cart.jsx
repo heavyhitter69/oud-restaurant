@@ -18,7 +18,8 @@ const Cart = () => {
     applyPromoCode,
     removePromoCode,
     url,
-    token
+    token,
+    setShowLogin
   } = useContext(StoreContext);
 
   const [promoCode, setPromoCode] = useState('');
@@ -133,6 +134,7 @@ const Cart = () => {
               <button onClick={() => {
                 if (!token) {
                   toast.error('Please login or create an account first to place an order');
+                  setShowLogin(true);
                 } else {
                   navigate('/order');
                 }
