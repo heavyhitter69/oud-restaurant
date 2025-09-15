@@ -53,7 +53,7 @@ const FoodDetailModal = ({ food, onClose }) => {
               </label>
             </div>
           </div>
-          <p className="food-item-price">₵{food.price}</p>
+          <p className="food-item-price">₵{price}</p>
         </div>
         <div className="modal-footer">
           <button onClick={handleAddToCart} className="add-to-cart-btn">Add to Cart</button>
