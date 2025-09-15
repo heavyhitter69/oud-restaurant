@@ -9,7 +9,7 @@
 
 .list-table-format{
     display: grid;
-    grid-template-columns: 1fr 3fr 1.5fr 1fr 1fr 1.5fr;
+    grid-template-columns: 1fr 2fr 1.5fr 1fr 2fr 1fr 1.5fr;
     align-items: center;
     gap: 15px;
     padding: 12px 15px;

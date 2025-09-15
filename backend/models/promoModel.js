@@ -42,7 +42,6 @@ const promoSchema = new mongoose.Schema({
 });
 
 // Index for faster queries
-promoSchema.index({ code: 1 });
 promoSchema.index({ validUntil: 1 });
 promoSchema.index({ isActive: 1 });
 

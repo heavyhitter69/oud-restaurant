@@ -6,7 +6,11 @@ import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import path from "path"
 import fs from "fs"
+import { fileURLToPath } from 'url'
 import { connectDB } from "./config/db.js"
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import foodRouter from "./routes/foodRoute.js"
 import userRouter from "./routes/userRoute.js"
 import cartRouter from "./routes/cartRoute.js"
@@ -57,6 +61,7 @@ app.use(limiter)
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:3000',
   'https://oud-restaurant-4nt0.onrender.com',
   'https://oud-restaurant-admin-yl6p.onrender.com',
   'https://oud-restaurant.onrender.com',

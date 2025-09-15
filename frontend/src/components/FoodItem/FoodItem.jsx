@@ -1,46 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import './FoodItem.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
-const FoodItem = ({ id, name, price, description, image, inStock }) => {
-  const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
-  const [localCartItems, setLocalCartItems] = useState(cartItems);
-
-  // Listen for cart clearing events - ULTRA AGGRESSIVE
-  useEffect(() => {
-    const handleCartCleared = () => {
-      console.log("🔄 FoodItem: Cart cleared event received");
-      setLocalCartItems({});
-      // Force immediate re-render
-      setTimeout(() => {
-        setLocalCartItems({});
-      }, 10);
-    };
-
-    // Listen to all possible cart clearing events
-    const events = ['cartCleared', 'forceCartReset', 'nuclearCartClear', 'cartReset', 'clearCart', 'cartAnnihilated'];
-    events.forEach(eventType => {
-      window.addEventListener(eventType, handleCartCleared);
-    });
-
-    return () => {
-      events.forEach(eventType => {
-        window.removeEventListener(eventType, handleCartCleared);
-      });
-    };
-  }, []);
-
-  // Update local cart items when context changes - ENHANCED
-  useEffect(() => {
-    console.log("🔄 FoodItem: Cart context updated", cartItems);
-    setLocalCartItems(cartItems);
-  }, [cartItems, cartVersion]);
+const FoodItem = ({ id, name, price, description, image, inStock, onItemClick }) => {
+  const { url } = useContext(StoreContext);
 
   if (!id || !name || !image) return null; // Prevent rendering broken items
 
   return (
-    <div className={`food-item ${!inStock ? 'out-of-stock' : ''}`} id={id} key={`${id}-${cartVersion}`}>
+    <div className={`food-item ${!inStock ? 'out-of-stock' : ''}`} id={id} onClick={inStock ? onItemClick : null}>
       <div className="food-item-img-container">
         {!inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         <img
@@ -63,20 +32,6 @@ const FoodItem = ({ id, name, price, description, image, inStock }) => {
             console.log(`Image loaded successfully: ${e.target.src} for item: ${name}`);
           }}
         />
-        {!inStock ? null : !localCartItems?.[id] ? (
-          <img
-            className='add'
-            onClick={() => addToCart(id)}
-            src={assets.add_icon_white}
-            alt='Add'
-          />
-        ) : (
-          <div className="food-item-counter">
-            <img onClick={() => removeFromCart(id)} src={assets.remove_icon_red} alt="Remove" />
-            <p>{localCartItems[id]}</p>
-            <img onClick={() => addToCart(id)} src={assets.add_icon_green} alt="Add" />
-          </div>
-        )}
       </div>
       <div className="food-item-info">
         <div className="food-item-name-rating">

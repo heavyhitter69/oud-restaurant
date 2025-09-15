@@ -3,21 +3,25 @@ import fs from 'fs';
 
 // Add food item
 const addFood = async (req, res) => {
+  console.log("Request body:", req.body);
   let image_filename = `${req.file.filename}`;
+  const customizations = req.body.customizations ? JSON.parse(req.body.customizations) : [];
 
   const food = new foodModel({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     category: req.body.category,
-    image: image_filename
+    image: image_filename,
+    customizations: customizations
   });
 
   try {
     await food.save();
+    console.log("Food saved successfully");
     res.json({ success: true, message: "Food Added" });
   } catch (error) {
-    console.log(error);
+    console.log("Error saving food:", error);
     res.json({ success: false, message: "Error" });
   }
 };
