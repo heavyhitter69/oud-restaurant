@@ -60,12 +60,22 @@ const StoreContextProvider = (props) => {
     }
   }, [cartItems, token]);
 
+  const generateCartItemId = (itemId, customizations) => {
+    if (!customizations || Object.keys(customizations).length === 0) {
+      return itemId;
+    }
+    const sortedKeys = Object.keys(customizations).sort();
+    const customizationString = sortedKeys.map(key => `${key}-${customizations[key]}`).join('_');
+    return `${itemId}_${customizationString}`;
+  };
+
   // Add to cart - supports local and server cart
-  const addToCart = useCallback(async (itemId) => {
+  const addToCart = useCallback(async (itemId, customizations = {}) => {
+    const cartItemId = generateCartItemId(itemId, customizations);
     if (token) {
       // Logged in: update server cart
       try {
-        const response = await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
+        const response = await axios.post(url + "/api/cart/add", { itemId, customizations }, { headers: { token } });
         if (response.data.success) {
           setCartItems(response.data.cartData);
         }
@@ -76,17 +86,18 @@ const StoreContextProvider = (props) => {
       // Not logged in: update local cart
       setCartItems((prev) => ({
         ...prev,
-        [itemId]: (prev[itemId] || 0) + 1,
+        [cartItemId]: (prev[cartItemId] || 0) + 1,
       }));
     }
   }, [token, url]);
 
   // Remove from cart - supports local and server cart
-  const removeFromCart = useCallback(async (itemId) => {
+  const removeFromCart = useCallback(async (itemId, customizations = {}) => {
+    const cartItemId = generateCartItemId(itemId, customizations);
     if (token) {
       // Logged in: update server cart
       try {
-        const response = await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
+        const response = await axios.post(url + "/api/cart/remove", { itemId, customizations }, { headers: { token } });
         if (response.data.success) {
           setCartItems(response.data.cartData);
         }
@@ -97,10 +108,10 @@ const StoreContextProvider = (props) => {
       // Not logged in: update local cart
       setCartItems((prev) => {
         const newCart = { ...prev };
-        if (newCart[itemId] > 1) {
-          newCart[itemId] -= 1;
+        if (newCart[cartItemId] > 1) {
+          newCart[cartItemId] -= 1;
         } else {
-          delete newCart[itemId];
+          delete newCart[cartItemId];
         }
         return newCart;
       });
@@ -158,11 +169,26 @@ const StoreContextProvider = (props) => {
   // Calculate total cart amount
   const getTotalCartAmount = useCallback(() => {
     let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        const itemInfo = food_list.find(product => product._id === item);
+    for (const cartItemId in cartItems) {
+      if (cartItems[cartItemId] > 0) {
+        const parts = cartItemId.split('_');
+        const itemId = parts[0];
+        const itemInfo = food_list.find(product => product._id === itemId);
         if (itemInfo) {
-          totalAmount += itemInfo.price * cartItems[item];
+          let itemPrice = itemInfo.price;
+          if (parts.length > 1) {
+            for (let i = 1; i < parts.length; i++) {
+              const [customizationName, optionName] = parts[i].split('-');
+              const customization = itemInfo.customizations.find(c => c.name === customizationName);
+              if (customization) {
+                const option = customization.options.find(o => o.name === optionName);
+                if (option) {
+                  itemPrice += option.price;
+                }
+              }
+            }
+          }
+          totalAmount += itemPrice * cartItems[cartItemId];
         }
       }
     }

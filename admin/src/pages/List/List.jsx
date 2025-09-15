@@ -77,6 +77,7 @@ const List = ({ url }) => {
           <b>Name</b>
           <b>Category</b>
           <b>Price</b>
+          <b>Customizations</b>
           <b>Status</b>
           <b>Actions</b>
         </div>
@@ -88,9 +89,9 @@ const List = ({ url }) => {
             {editingId === item._id ? (
               <>
                 <div data-label="Image" className="edit-image-container">
-                  <img 
-                    src={editImage ? URL.createObjectURL(editImage) : `${url}/images/${item.image}`} 
-                    alt={item.name} 
+                  <img
+                    src={editImage ? URL.createObjectURL(editImage) : `${url}/images/${item.image}`}
+                    alt={item.name}
                   />
                   <input
                     type="file"
@@ -127,6 +128,19 @@ const List = ({ url }) => {
                     onChange={(e) => setEditValues({ ...editValues, price: e.target.value })}
                   />
                 </div>
+                <div data-label="Customizations">
+                  {/* Customizations are not editable in this view */}
+                  {item.customizations.map((c, i) => (
+                    <div key={i}>
+                      <strong>{c.name}:</strong>
+                      <ul>
+                        {c.options.map((o, j) => (
+                          <li key={j}>{o.name} (+${o.price})</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
                 <div data-label="Status">
                     <p className={`status ${item.inStock ? 'in-stock' : 'out-of-stock'}`}>
                         {item.inStock ? "In Stock" : "Out of Stock"}
@@ -145,6 +159,18 @@ const List = ({ url }) => {
                 <p data-label="Name">{item.name}</p>
                 <p data-label="Category">{item.category}</p>
                 <p data-label="Price">${item.price}</p>
+                <div data-label="Customizations">
+                  {item.customizations && item.customizations.map((c, i) => (
+                    <div key={i}>
+                      <strong>{c.name}:</strong>
+                      <ul>
+                        {c.options.map((o, j) => (
+                          <li key={j}>{o.name} (+${o.price})</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
                 <div data-label="Status" className={`status ${item.inStock ? 'in-stock' : 'out-of-stock'}`}>
                     {item.inStock ? "In Stock" : "Out of Stock"}
                 </div>
