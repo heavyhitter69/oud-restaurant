@@ -3,12 +3,7 @@ import './FoodItem.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
-import React, { useContext, useEffect, useState } from 'react';
-import './FoodItem.css';
-import { assets } from '../../assets/assets';
-import { StoreContext } from '../../context/StoreContext';
-
-const FoodItem = ({ id, name, price, description, image, inStock, onShowModal }) => {
+const FoodItem = ({ id, name, price, description, image, inStock }) => {
   const { cartItems, cartVersion, addToCart, removeFromCart, url } = useContext(StoreContext);
   const [localCartItems, setLocalCartItems] = useState(cartItems);
 
@@ -45,7 +40,7 @@ const FoodItem = ({ id, name, price, description, image, inStock, onShowModal })
   if (!id || !name || !image) return null; // Prevent rendering broken items
 
   return (
-    <div className={`food-item ${!inStock ? 'out-of-stock' : ''}`} id={id} key={`${id}-${cartVersion}`} onClick={() => onShowModal({ _id: id, name, price, description, image })}>
+    <div className={`food-item ${!inStock ? 'out-of-stock' : ''}`} id={id} key={`${id}-${cartVersion}`}>
       <div className="food-item-img-container">
         {!inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         <img
@@ -68,6 +63,20 @@ const FoodItem = ({ id, name, price, description, image, inStock, onShowModal })
             console.log(`Image loaded successfully: ${e.target.src} for item: ${name}`);
           }}
         />
+        {!inStock ? null : !localCartItems?.[id] ? (
+          <img
+            className='add'
+            onClick={() => addToCart(id)}
+            src={assets.add_icon_white}
+            alt='Add'
+          />
+        ) : (
+          <div className="food-item-counter">
+            <img onClick={() => removeFromCart(id)} src={assets.remove_icon_red} alt="Remove" />
+            <p>{localCartItems[id]}</p>
+            <img onClick={() => addToCart(id)} src={assets.add_icon_green} alt="Add" />
+          </div>
+        )}
       </div>
       <div className="food-item-info">
         <div className="food-item-name-rating">
